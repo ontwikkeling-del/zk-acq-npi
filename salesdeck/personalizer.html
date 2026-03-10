@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesdeck Personalizer — Zwarte Kraai</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- PDF: Puppeteer (dev) with browser print fallback (production). Bulk ZIP: JSZip (dev only) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 420px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            flex-shrink: 0;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+        }
+
+        .sidebar-header {
+            padding: 24px 28px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sidebar-header h1 {
+            font-size: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #9482fb;
+        }
+
+        .sidebar-header p {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 28px;
+        }
+
+        .sidebar-content::-webkit-scrollbar { width: 4px; }
+        .sidebar-content::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-content::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        .form-group select:focus { border-color: #9482fb; background-color: #fff; }
+
+        /* ===== PRESENTER PREVIEW ===== */
+        .presenter-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .presenter-preview img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .presenter-preview .info { flex: 1; min-width: 0; }
+        .presenter-preview .info .name { font-size: 12px; font-weight: 700; color: #1f2937; }
+        .presenter-preview .info .role { font-size: 10px; color: #9ca3af; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 24px 0;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9482fb;
+            margin-bottom: 16px;
+        }
+
+        /* ===== DOMAIN INPUTS ===== */
+        .domain-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .domain-num {
+            font-size: 10px;
+            font-weight: 700;
+            color: #d1d5db;
+            width: 18px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .domain-input {
+            flex: 1;
+            padding: 9px 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            min-width: 0;
+        }
+
+        .domain-input:focus { border-color: #9482fb; background: #fff; }
+        .domain-input::placeholder { color: #d1d5db; }
+
+        .domain-status {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 11px;
+        }
+
+        .domain-status.empty { background: #f3f4f6; }
+        .domain-status.loading { background: #fef3c7; }
+        .domain-status.loading::after {
+            content: '';
+            width: 10px; height: 10px;
+            border: 2px solid #f59e0b;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        .domain-status.success { background: #d1fae5; color: #059669; }
+        .domain-status.error { background: #fee2e2; color: #ef4444; font-weight: 700; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== ACTION BUTTONS ===== */
+        .personalize-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #9482fb, #7b6ae0);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: inherit;
+            margin-top: 16px;
+        }
+
+        .personalize-btn:hover { background: linear-gradient(135deg, #a594ff, #8b7af0); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(148,130,251,0.3); }
+        .personalize-btn:active { transform: translateY(0); }
+        .personalize-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ===== PROGRESS ===== */
+        .progress-section {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .progress-section.visible { display: block; }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #9482fb, #00e1ff);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
+        }
+
+        /* ===== RESULTS ===== */
+        .results-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .results-section.visible { display: block; }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .result-item:hover { background: #f3f0ff; border-color: #d4cffa; }
+        .result-item.active { background: #f3f0ff; border-color: #9482fb; }
+
+        .result-item img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .result-item .result-name {
+            flex: 1;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f2937;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .result-item .result-branch {
+            font-size: 10px;
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .download-individual {
+            padding: 5px 10px;
+            background: #9482fb;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+
+        .download-individual:hover { background: #7c6ae8; }
+
+        .download-zip-btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #059669, #047857);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+            margin-top: 10px;
+        }
+
+        .download-zip-btn:hover { background: linear-gradient(135deg, #10b981, #059669); transform: translateY(-1px); }
+        .download-zip-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ===== API KEY ===== */
+        .ai-key-row {
+            display: none;
+            gap: 6px;
+            align-items: stretch;
+            margin-top: 12px;
+        }
+
+        .ai-key-row.visible { display: flex; }
+
+        .ai-key-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 7px 10px;
+            font-size: 11px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-family: inherit;
+            color: #6b7280;
+            outline: none;
+        }
+
+        .ai-key-row input:focus { border-color: #9482fb; }
+
+        .ai-key-row button {
+            padding: 7px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #6b7280;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .ai-key-row button:hover { background: #e5e7eb; }
+
+        /* ===== PREVIEW ===== */
+        .preview-area {
+            flex: 1;
+            background: #e5e7eb;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-area iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #e5e5e5;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        .loading-overlay.loaded {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(148,130,251,0.2);
+            border-top-color: #9482fb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .preview-empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #9ca3af;
+        }
+
+        .preview-empty svg {
+            width: 48px;
+            height: 48px;
+            color: #d1d5db;
+        }
+
+        .preview-empty p {
+            font-size: 13px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ===== EDIT TOOLBAR ===== */
+        .edit-toolbar {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            z-index: 20;
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-toggle-btn {
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: inherit;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #fff;
+            color: #6b7280;
+        }
+
+        .edit-toggle-btn:hover { border-color: #9482fb; color: #9482fb; }
+        .edit-toggle-btn.active { background: #9482fb; color: #fff; border-color: #9482fb; }
+
+        /* ===== EXPORT / IMPORT ===== */
+        .export-import-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .export-import-btn {
+            flex: 1;
+            padding: 10px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: inherit;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #f9fafb;
+            color: #6b7280;
+        }
+
+        .export-import-btn:hover { border-color: #9482fb; color: #9482fb; background: #f3f0ff; }
+
+        /* ===== MAIL MODAL ===== */
+        .mail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .mail-overlay.visible { display: flex; }
+
+        .mail-modal {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+            width: 640px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .mail-modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mail-modal-header h2 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #9482fb;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mail-modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mail-modal-close:hover { background: #e5e7eb; }
+
+        .mail-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+        }
+
+        .mail-modal-body textarea {
+            width: 100%;
+            min-height: 400px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #1f2937;
+            resize: vertical;
+            outline: none;
+            background: #f9fafb;
+        }
+
+        .mail-modal-body textarea:focus { border-color: #9482fb; background: #fff; }
+
+        .mail-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .mail-copy-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #9482fb, #7b6ae0);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .mail-copy-btn:hover { background: linear-gradient(135deg, #a594ff, #8b7af0); }
+
+        .mail-copy-btn.copied {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .mail-close-btn {
+            padding: 10px 24px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .mail-close-btn:hover { background: #e5e7eb; }
+
+        .mail-btn { background: #059669 !important; }
+        .mail-btn:hover { background: #047857 !important; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Salesdeck Personalizer</h1>
+            <p>Batch-personalisatie van sales presentaties</p>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="section-title">Presentator</div>
+
+            <div class="form-group">
+                <label>Kies presentator</label>
+                <select id="presenter-select" onchange="onPresenterChange()">
+                    <option value="0">Erwin Dijkstra — Founder & CEO</option>
+                    <option value="1">Dennis Nijborg — Founder & CTO</option>
+                    <option value="2">Hoger Hamo — AI Automation Specialist</option>
+                    <option value="3">Migilio Tirtosentono — Senior Sales Professional</option>
+                    <option value="4">David Pantophlet — Head of AI</option>
+                    <option value="5">Danny Hoekstra — RevOps Specialist</option>
+                </select>
+                <div class="presenter-preview" id="presenter-preview">
+                    <img src="photos/erwin-dijkstra.jpg" alt="">
+                    <div class="info">
+                        <div class="name">Erwin Dijkstra</div>
+                        <div class="role">Founder & CEO</div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+            <div class="section-title">Domeinen</div>
+            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 12px;">Voer 1 tot 10 domeinnamen in. OpenAI verrijkt automatisch de bedrijfsgegevens.</p>
+
+            <div id="domain-list">
+                <!-- 10 domain inputs generated by JS -->
+            </div>
+
+            <button class="personalize-btn" id="personalize-btn" onclick="startPersonalization()">
+                Personaliseren
+            </button>
+
+            <div class="ai-key-row" id="ai-key-row">
+                <input type="password" id="ai-key-input" placeholder="OpenAI API key (sk-...)">
+                <button onclick="saveAiKey()">Opslaan</button>
+            </div>
+
+            <div class="progress-section" id="progress-section">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">Voorbereiden...</div>
+            </div>
+
+            <div class="results-section" id="results-section">
+                <div class="section-title">Resultaten</div>
+                <div id="results-list"></div>
+                <button class="download-zip-btn" id="download-all-btn" onclick="downloadAllAsZip()">
+                    &#8595; Download alles als ZIP
+                </button>
+                <div class="export-import-row">
+                    <button class="export-import-btn" onclick="exportJSON()">&#8599; Exporteer JSON</button>
+                    <button class="export-import-btn" onclick="document.getElementById('import-file').click()">&#8601; Importeer JSON</button>
+                </div>
+                <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importJSON(this.files[0])">
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-area">
+        <div class="edit-toolbar" id="edit-toolbar" style="display:none;">
+            <button class="edit-toggle-btn" id="edit-toggle-btn" onclick="toggleEditMode()">Bewerken</button>
+        </div>
+        <div class="loading-overlay" id="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Template laden...</div>
+        </div>
+        <div class="preview-empty" id="preview-empty">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <p>Voer domeinen in en klik op Personaliseren</p>
+        </div>
+        <iframe id="preview" style="display:none;"></iframe>
+    </div>
+
+    <!-- Mail Template Modal -->
+    <div class="mail-overlay" id="mail-overlay" onclick="if(event.target===this)closeMailModal()">
+        <div class="mail-modal">
+            <div class="mail-modal-header">
+                <h2 id="mail-modal-title">Mailtemplate</h2>
+                <button class="mail-modal-close" onclick="closeMailModal()">&times;</button>
+            </div>
+            <div class="mail-modal-body">
+                <textarea id="mail-textarea" spellcheck="false"></textarea>
+            </div>
+            <div class="mail-modal-footer">
+                <button class="mail-close-btn" onclick="closeMailModal()">Sluiten</button>
+                <button class="mail-copy-btn" id="mail-copy-btn" onclick="copyMailTemplate()">Kopieer naar klembord</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== DATA =====
+        const TEAM_MEMBERS = [
+            { name: 'Erwin Dijkstra', role: 'Founder & CEO', email: 'erwin@zwartekraai.nl', phone: '+31 6 38 40 86 84', photo: 'photos/erwin-dijkstra.jpg' },
+            { name: 'Dennis Nijborg', role: 'Founder & CTO', email: 'dennis@zwartekraai.nl', phone: '+31 6 46 36 64 41', photo: 'photos/dennis-nijborg.jpg' },
+            { name: 'Hoger Hamo', role: 'AI Automation Specialist', email: 'hoger@zwartekraai.nl', phone: '', photo: 'photos/hoger-hamo.jpg' },
+            { name: 'Migilio Tirtosentono', role: 'Senior Sales Professional & Trainer', email: 'migilio@zwartekraai.nl', phone: '+31 6 23 94 58 09', photo: 'photos/migilio-tirtosentono.jpg' },
+            { name: 'David Pantophlet', role: 'Head of AI', email: 'david@zwartekraai.nl', phone: '', photo: 'photos/david-pantophlet.jpg' },
+            { name: 'Danny Hoekstra', role: 'RevOps Specialist', email: 'danny@zwartekraai.nl', phone: '+31 6 21 57 35 59', photo: 'foto-danny.jpeg' },
+        ];
+
+        let templateHTML = '';
+        let enrichedResults = []; // Array of {domain, companyName, branch, branchText, description, logoUrl, html}
+        let activeResultIdx = -1;
+        let editMode = false;
+
+        // ===== INIT =====
+        function init() {
+            generateDomainInputs();
+            loadTemplate();
+            seedApiKey();
+        }
+
+        function generateDomainInputs() {
+            const container = document.getElementById('domain-list');
+            let html = '';
+            for (let i = 1; i <= 10; i++) {
+                html += `
+                    <div class="domain-row">
+                        <span class="domain-num">${i}</span>
+                        <input class="domain-input" type="text" id="domain-${i}" placeholder="bijv. wovar.nl" />
+                        <div class="domain-status empty" id="status-${i}"></div>
+                    </div>`;
+            }
+            container.innerHTML = html;
+
+            // Bulk paste: plak meerdere domeinen (één per regel) in elk veld
+            for (let i = 1; i <= 10; i++) {
+                document.getElementById(`domain-${i}`).addEventListener('paste', function(e) {
+                    const text = (e.clipboardData || window.clipboardData).getData('text');
+                    const lines = text.split(/[\n\r]+/).map(l => l.trim()).filter(Boolean);
+                    if (lines.length > 1) {
+                        e.preventDefault();
+                        const startIdx = i;
+                        lines.forEach((line, j) => {
+                            const fieldIdx = startIdx + j;
+                            if (fieldIdx <= 10) {
+                                document.getElementById(`domain-${fieldIdx}`).value = line;
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        async function loadTemplate() {
+            try {
+                const resp = await fetch('index.html');
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                templateHTML = await resp.text();
+                document.getElementById('loading').classList.add('loaded');
+            } catch (e) {
+                console.error('Failed to load template:', e);
+                document.getElementById('loading').innerHTML = `
+                    <div style="text-align:center; padding:40px;">
+                        <p style="color:#ef4444; font-weight:700;">Template niet gevonden</p>
+                        <p style="color:#6b7280; font-size:13px; margin-top:8px;">Zorg dat index.html in dezelfde map staat.</p>
+                    </div>`;
+            }
+        }
+
+        function seedApiKey() {
+            if (!localStorage.getItem('zk_openai_key')) {
+                localStorage.setItem('zk_openai_key', 'REMOVED');
+            }
+        }
+
+        // ===== PRESENTER =====
+        function getSelectedPresenter() {
+            const idx = parseInt(document.getElementById('presenter-select').value, 10);
+            return TEAM_MEMBERS[idx] || TEAM_MEMBERS[0];
+        }
+
+        function onPresenterChange() {
+            const p = getSelectedPresenter();
+            document.getElementById('presenter-preview').innerHTML = `
+                <img src="${escapeAttr(p.photo)}" alt="" onerror="this.style.display='none'">
+                <div class="info">
+                    <div class="name">${p.name}</div>
+                    <div class="role">${p.role}</div>
+                </div>`;
+        }
+
+        // ===== API KEY =====
+        function getAiKey() {
+            return localStorage.getItem('zk_openai_key') || '';
+        }
+
+        function saveAiKey() {
+            const key = document.getElementById('ai-key-input').value.trim();
+            if (key) {
+                localStorage.setItem('zk_openai_key', key);
+                document.getElementById('ai-key-row').classList.remove('visible');
+                startPersonalization();
+            }
+        }
+
+        // ===== ENRICHMENT =====
+        function getDomains() {
+            const domains = [];
+            for (let i = 1; i <= 10; i++) {
+                const val = document.getElementById(`domain-${i}`).value.trim().toLowerCase();
+                if (val) {
+                    // Strip protocol and trailing slash
+                    const clean = val.replace(/^https?:\/\//, '').replace(/\/+$/, '').replace(/^www\./, '');
+                    if (clean) domains.push({ index: i, domain: clean });
+                }
+            }
+            return domains;
+        }
+
+        function setStatus(index, status, label) {
+            const el = document.getElementById(`status-${index}`);
+            el.className = `domain-status ${status}`;
+            if (status === 'success') el.innerHTML = '&#10003;';
+            else if (status === 'error') el.innerHTML = '!';
+            else el.innerHTML = '';
+            el.title = label || '';
+        }
+
+        // Scrape website homepage for context
+        // Tries server-side proxy first (dev), then allorigins.win CORS proxy (production)
+        async function scrapeWebsite(domain) {
+            // Try server-side proxy (works in Vite dev server)
+            try {
+                const resp = await fetch(`/api/scrape?domain=${encodeURIComponent(domain)}`);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.context) return data.context;
+                }
+            } catch {}
+
+            // Fallback: allorigins.win CORS proxy (works in production)
+            try {
+                const targetUrl = `https://www.${domain}`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+                const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+                if (!resp.ok) return '';
+                const data = await resp.json();
+                if (!data.contents) return '';
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+
+                // Remove noise
+                doc.querySelectorAll('script,style,noscript,svg,nav,footer,header').forEach(el => el.remove());
+
+                const title = doc.querySelector('title')?.textContent?.trim() || '';
+                const metaDesc = doc.querySelector('meta[name="description"]')?.content?.trim() || '';
+                const ogDesc = doc.querySelector('meta[property="og:description"]')?.content?.trim() || '';
+                const keywords = doc.querySelector('meta[name="keywords"]')?.content?.trim() || '';
+                const bodyText = (doc.body?.textContent || '').replace(/\s+/g, ' ').trim().substring(0, 2000);
+
+                const parts = [];
+                if (title) parts.push(`Paginatitel: ${title}`);
+                if (metaDesc) parts.push(`Meta description: ${metaDesc}`);
+                if (ogDesc && ogDesc !== metaDesc) parts.push(`OG description: ${ogDesc}`);
+                if (keywords) parts.push(`Keywords: ${keywords}`);
+                if (bodyText) parts.push(`Website tekst: ${bodyText}`);
+                return parts.join('\n');
+            } catch {}
+
+            return '';
+        }
+
+        async function enrichDomain(domain) {
+            const apiKey = getAiKey();
+
+            // First: scrape the website for real context
+            const websiteContext = await scrapeWebsite(domain);
+            const contextBlock = websiteContext
+                ? `\n\nHIERONDER DE INHOUD VAN DE WEBSITE (gebruik dit als primaire bron voor je antwoorden):\n---\n${websiteContext}\n---\n`
+                : '\n\n(Website kon niet opgehaald worden — baseer je antwoorden op wat je weet over dit domein.)\n';
+
+            const prompt = `Je krijgt een domeinnaam van een bedrijf, samen met de inhoud van hun website. Gebruik de website-inhoud als PRIMAIRE bron om te bepalen wat het bedrijf doet, verkoopt en aan wie. Geef de volgende informatie terug als pure JSON (geen markdown, geen backticks):
+{
+  "companyName": "officiële bedrijfsnaam (haal dit van de website, niet raden)",
+  "branch": "branche code gebaseerd op de KERNACTIVITEIT van het bedrijf. Bepaal: wat DOET dit bedrijf primair? Kies uit: food (produceert/verwerkt voedingsmiddelen of dranken), productie (maakt/fabriceert fysieke producten — niet voeding), bouw (bouwt, installeert of legt aan — heeft monteurs/vakmensen), techniek (IT/software/engineering/technisch advies), handel (VERKOOPT producten — webshop/groothandel/retail/leverancier/distributeur — ook als producten technisch of bouw-gerelateerd zijn), agri (landbouw/tuinbouw/veeteelt/kwekerij), dienstverlening (verleent diensten, advies, consultancy). BESLISREGEL: Verkoopt het bedrijf PRODUCTEN (ook bouwmaterialen, bevestigingsmaterialen, tuinartikelen, machines)? → handel. Bouwt/installeert het bedrijf ZELF fysiek? → bouw. Maakt het bedrijf de producten ZELF? → productie. Bij twijfel: check of de website een webshop heeft → handel.",
+  "branchText": "branche als volzin bijv. 'de voedingsmiddelenindustrie'. Classificeer op kernactiviteit: een webshop/leverancier van isolatiemateriaal = 'de technische handel', een aannemer = 'de bouwsector', een sauzenproducent = 'de voedingsmiddelenindustrie'.",
+  "shortDescription": "1 korte zin over wat het bedrijf doet, gebaseerd op de website-inhoud",
+  "emailObservation": "Een observatie over het bedrijf die aansluit op de zin 'Ik neem contact op omdat ik zag dat'. Begin DIRECT met de bedrijfsnaam (ZONDER 'Ik neem contact op omdat ik zag dat' — die wordt al door het mailtemplate toegevoegd). Eindig met een punt. De observatie MOET gaan over een SALES/CRM-gerelateerde uitdaging die logisch volgt uit wat je op de website ziet: klantrelaties beheren, meerdere verkoopkanalen overzien, leads opvolgen, pipeline bijhouden, cross-sell/upsell kansen, of herhaalaankopen stimuleren. NOOIT over operationele zaken (voorraadbeheer, logistiek, productie, inkoop). Gebruik ALLEEN feiten die je daadwerkelijk op de website kunt verifiëren: concrete producten, genoemde markten, zichtbare verkoopkanalen (webshop, dealers, export), doelgroepen. NIET speculeren over interne processen. Voorbeelden van GOEDE observaties: 'Wovar naast de eigen webshop ook via dealers en resellers levert, en dat het bijhouden van al die klantrelaties over zoveel kanalen zonder centraal CRM al snel onoverzichtelijk kan worden.' of 'BMTec een breed assortiment bevestigingsmaterialen aanbiedt aan zowel particulieren als zakelijke klanten, en dat cross-sell kansen tussen die productlijnen vaak onbenut blijven zonder slimme sales signalen.' of 'Oliehoorn levert aan horeca en retail door heel Nederland, en dat het opvolgen van zoveel klantrelaties over verschillende kanalen zonder centraal systeem een uitdaging is.'",
+  "sectorPill": "Voor ondernemers in [sector] — bijv. 'Voor ondernemers in de voedingsmiddelenindustrie'",
+  "sectorSubtitle": "De dagelijkse realiteit van [sector-beschrijving] — bijv. 'De dagelijkse realiteit van foodbedrijven met een salesteam'",
+  "challenges": [
+    {"title": "korte pakkende titel (max 8 woorden)", "description": "2 zinnen over een sector-specifieke sales uitdaging rond CONTROLE/OVERZICHT"},
+    {"title": "korte pakkende titel (max 8 woorden)", "description": "2 zinnen over een sector-specifieke sales uitdaging rond VOORSPELBAARHEID/FORECAST"},
+    {"title": "korte pakkende titel (max 8 woorden)", "description": "2 zinnen over een sector-specifieke sales uitdaging rond TIJD/EFFICIENTIE"},
+    {"title": "korte pakkende titel (max 8 woorden)", "description": "2 zinnen over een sector-specifieke sales uitdaging rond AFHANKELIJKHEID/KENNIS"}
+  ]
+}
+
+De uitdagingen moeten herkenbaar zijn voor ondernemers in deze specifieke sector. Gebruik concrete voorbeelden uit de branche. Schrijf alsof je tegen de ondernemer praat (je/jouw).
+${contextBlock}
+Domein: ${domain}`;
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    messages: [{ role: 'user', content: prompt }],
+                    max_tokens: 800,
+                    temperature: 0.3,
+                }),
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    localStorage.removeItem('zk_openai_key');
+                    throw new Error('INVALID_KEY');
+                }
+                throw new Error(`API error ${response.status}`);
+            }
+
+            const data = await response.json();
+            const raw = data.choices?.[0]?.message?.content?.trim() || '';
+
+            // Parse JSON from response (strip possible markdown fences)
+            const jsonStr = raw.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+            return JSON.parse(jsonStr);
+        }
+
+        async function fetchLogo(domain) {
+            // Build domain variations: original + .com + .nl fallback
+            const domains = [domain];
+            const baseName = domain.split('.')[0];
+            const comDomain = baseName + '.com';
+            if (comDomain !== domain) domains.push(comDomain);
+            const nlDomain = baseName + '.nl';
+            if (nlDomain !== domain && nlDomain !== comDomain) domains.push(nlDomain);
+
+            // Phase 1: high-res sources — all in parallel, first valid wins
+            const hiResUrls = domains.flatMap(d => [
+                `https://logo.clearbit.com/${d}?size=512&format=png`,
+                `https://${d}/apple-touch-icon.png`,
+                `https://${d}/apple-touch-icon-precomposed.png`,
+            ]);
+            const hiRes = await raceValid(hiResUrls, 64);
+            if (hiRes) return hiRes;
+
+            // Phase 2: medium-res fallback — all in parallel
+            const medUrls = domains.flatMap(d => [
+                `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${d}&size=128`,
+                `https://www.google.com/s2/favicons?domain=${d}&sz=128`,
+            ]);
+            const med = await raceValid(medUrls, 32);
+            if (med) return med;
+
+            return '';
+        }
+
+        // Try all URLs in parallel, return first valid result
+        async function raceValid(urls, minSize) {
+            const results = await Promise.allSettled(
+                urls.map(url => tryLoadImage(url, minSize))
+            );
+            for (const r of results) {
+                if (r.status === 'fulfilled' && r.value) return r.value;
+            }
+            return null;
+        }
+
+        function tryLoadImage(url, minSize = 32) {
+            return new Promise(resolve => {
+                // 5-second timeout for the entire attempt
+                const timer = setTimeout(() => resolve(null), 5000);
+                const done = (val) => { clearTimeout(timer); resolve(val); };
+                // Primary: fetch as blob → FileReader → data URL (best for PDF)
+                fetch(url, { mode: 'cors', signal: AbortSignal.timeout(4000) }).then(resp => {
+                    if (!resp.ok) throw new Error();
+                    const ct = resp.headers.get('content-type') || '';
+                    if (!ct.startsWith('image/') && !ct.includes('octet-stream')) throw new Error();
+                    return resp.blob();
+                }).then(blob => {
+                    if (blob.size < 100) { done(null); return; }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const testImg = new Image();
+                        testImg.onload = () => (testImg.naturalWidth >= minSize) ? done(reader.result) : done(null);
+                        testImg.onerror = () => done(null);
+                        testImg.src = reader.result;
+                    };
+                    reader.onerror = () => done(null);
+                    reader.readAsDataURL(blob);
+                }).catch(() => {
+                    // Fallback: img element + canvas → data URL
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.onload = () => {
+                        if (img.naturalWidth < minSize) { done(null); return; }
+                        try {
+                            const c = document.createElement('canvas');
+                            c.width = img.naturalWidth;
+                            c.height = img.naturalHeight;
+                            c.getContext('2d').drawImage(img, 0, 0);
+                            done(c.toDataURL('image/png'));
+                        } catch {
+                            done(url); // Canvas tainted: raw URL as fallback
+                        }
+                    };
+                    img.onerror = () => {
+                        // Last resort: try without CORS (raw URL)
+                        const img2 = new Image();
+                        img2.onload = () => (img2.naturalWidth >= minSize) ? done(url) : done(null);
+                        img2.onerror = () => done(null);
+                        img2.src = url;
+                    };
+                    img.src = url;
+                });
+            });
+        }
+
+        // ===== PERSONALIZATION =====
+        function personalizeTemplate(data, presenter) {
+            if (!templateHTML) return '';
+            let html = templateHTML;
+
+            // Inject prospect logo on cover (inside white pill container)
+            // Prefer data URLs for PDF compatibility, but accept raw URLs as fallback
+            if (data.logoUrl) {
+                html = html.replace(
+                    /(<div class="prospect-logo-container"[^>]*?)style="display:\s*none;/,
+                    '$1style="display:block;'
+                );
+                html = html.replace(
+                    /(<img class="prospect-logo"[^>]*?)src="[^"]*"([^>]*?)alt="[^"]*"/,
+                    `$1src="${escapeAttr(data.logoUrl)}"$2alt="${escapeAttr(data.companyName)}"`
+                );
+            }
+
+            // Inject prospect subtitle (strip legal forms like BV, NV)
+            html = html.replace(
+                /(<p class="prospect-subtitle[^>]*?) style="display:\s*none;">\s*<\/p>/,
+                `$1>Speciaal voor ${escapeHtml(stripLegalForm(data.companyName))}</p>`
+            );
+
+            // Sector-specific pill on cover
+            if (data.sectorPill) {
+                html = html.replace(
+                    /(<div class="sector-pill[^>]*>)[^<]*/,
+                    `$1${escapeHtml(data.sectorPill)}`
+                );
+            }
+
+            // Sector-specific subtitle on slide 2
+            if (data.sectorSubtitle) {
+                html = html.replace(
+                    /(<p class="sector-subtitle[^>]*>)[^<]*/,
+                    `$1${escapeHtml(data.sectorSubtitle)}`
+                );
+            }
+
+            // Sector-specific challenges on slide 2 (4 cards)
+            if (data.challenges && data.challenges.length === 4) {
+                for (let i = 0; i < 4; i++) {
+                    const c = data.challenges[i];
+                    // Replace title
+                    html = html.replace(
+                        new RegExp(`(<p class="challenge-title-${i+1}[^>]*>)[^<]*`),
+                        `$1${escapeHtml(c.title)}`
+                    );
+                    // Replace description
+                    html = html.replace(
+                        new RegExp(`(<p class="challenge-desc-${i+1}[^>]*>)[^<]*`),
+                        `$1${escapeHtml(c.description)}`
+                    );
+                }
+            }
+
+            // Presenter on CTA slide
+            html = html.replace(
+                /(<img class="presenter-photo[^>]*) src="[^"]*"/,
+                `$1 src="${escapeAttr(presenter.photo)}"`
+            );
+            html = html.replace(
+                /(<p class="presenter-name[^>]*>)[^<]*/,
+                `$1${escapeHtml(presenter.name)}`
+            );
+            html = html.replace(
+                /(<p class="presenter-role[^>]*>)[^<]*/,
+                `$1${escapeHtml(presenter.role)}`
+            );
+
+            // Phone & Email on CTA slide
+            if (presenter.phone) {
+                html = html.replace(
+                    /(<div class="presenter-phone[^>]*>)[^<]*/,
+                    `$1${escapeHtml(presenter.phone)}`
+                );
+                html = html.replace(
+                    /(<div class="presenter-email[^>]*>)[^<]*/,
+                    `$1${escapeHtml(presenter.email)}`
+                );
+            } else {
+                // No phone number: remove phone container, show only email
+                html = html.replace(
+                    /<div class="presenter-phone[^>]*>[\s\S]*?<\/div>/,
+                    ''
+                );
+                html = html.replace(
+                    /(<div class="presenter-email[^>]*>)[^<]*/,
+                    `$1${escapeHtml(presenter.email)}`
+                );
+            }
+
+            // Add <base> for relative image paths + text overflow CSS
+            const baseUrl = getBaseUrl();
+            const extraCSS = `<style>
+              .sector-pill { max-width:90%; }
+            </style>`;
+            html = html.replace(
+                /<meta charset="UTF-8"\s*\/?>/,
+                `<meta charset="UTF-8" />\n    <base href="${baseUrl}">\n    ${extraCSS}`
+            );
+
+            return html;
+        }
+
+        // ===== BATCH PROCESS =====
+        async function startPersonalization() {
+            const apiKey = getAiKey();
+            if (!apiKey) {
+                document.getElementById('ai-key-row').classList.add('visible');
+                document.getElementById('ai-key-input').focus();
+                return;
+            }
+
+            const domains = getDomains();
+            if (domains.length === 0) {
+                alert('Voer minimaal 1 domeinnaam in.');
+                return;
+            }
+
+            const btn = document.getElementById('personalize-btn');
+            btn.disabled = true;
+            btn.textContent = 'Verwerken...';
+
+            const progressSection = document.getElementById('progress-section');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            progressSection.classList.add('visible');
+
+            const resultsSection = document.getElementById('results-section');
+            resultsSection.classList.remove('visible');
+
+            enrichedResults = [];
+            const presenter = getSelectedPresenter();
+            let completed = 0;
+
+            // Reset all statuses
+            for (let i = 1; i <= 10; i++) setStatus(i, 'empty', '');
+
+            for (const { index, domain } of domains) {
+                setStatus(index, 'loading', 'Verrijken...');
+                progressText.textContent = `${completed}/${domains.length} verwerkt — ${domain}...`;
+                progressFill.style.width = `${(completed / domains.length) * 100}%`;
+
+                try {
+                    // Enrich + fetch logo in parallel
+                    const [info, logoUrl] = await Promise.all([
+                        enrichDomain(domain),
+                        fetchLogo(domain),
+                    ]);
+
+                    if (info.companyName === 'INVALID_KEY') throw new Error('INVALID_KEY');
+
+                    const result = {
+                        domain,
+                        companyName: info.companyName || domain,
+                        branch: info.branch || '',
+                        branchText: info.branchText || '',
+                        description: info.shortDescription || '',
+                        emailObservation: info.emailObservation || info.shortDescription || '',
+                        sectorPill: info.sectorPill || '',
+                        sectorSubtitle: info.sectorSubtitle || '',
+                        challenges: info.challenges || [],
+                        logoUrl,
+                        html: '',
+                    };
+
+                    result.html = personalizeTemplate(result, presenter);
+                    enrichedResults.push(result);
+
+                    setStatus(index, 'success', result.companyName);
+                } catch (err) {
+                    if (err.message === 'INVALID_KEY') {
+                        document.getElementById('ai-key-row').classList.add('visible');
+                        document.getElementById('ai-key-input').value = '';
+                        document.getElementById('ai-key-input').focus();
+                        btn.disabled = false;
+                        btn.textContent = 'Personaliseren';
+                        progressSection.classList.remove('visible');
+                        alert('Ongeldige API key. Voer een nieuwe key in.');
+                        return;
+                    }
+                    console.error(`Error enriching ${domain}:`, err);
+                    setStatus(index, 'error', err.message);
+                }
+
+                completed++;
+            }
+
+            progressFill.style.width = '100%';
+            progressText.textContent = `${completed}/${domains.length} verwerkt — klaar!`;
+
+            btn.disabled = false;
+            btn.textContent = 'Personaliseren';
+
+            if (enrichedResults.length > 0) {
+                showResults();
+                selectResult(0);
+            }
+        }
+
+        // ===== RESULTS =====
+        function showResults() {
+            const section = document.getElementById('results-section');
+            const list = document.getElementById('results-list');
+
+            let html = '';
+            enrichedResults.forEach((r, i) => {
+                html += `
+                    <div class="result-item" id="result-${i}" onclick="selectResult(${i})">
+                        <img src="${escapeAttr(r.logoUrl)}" alt="" onerror="this.style.display='none'">
+                        <span class="result-name">${escapeHtml(r.companyName)}</span>
+                        <span class="result-branch">${escapeHtml(r.branchText)}</span>
+                        <button class="download-individual mail-btn" onclick="event.stopPropagation(); showMailTemplate(${i})">Mail</button>
+                        <button class="download-individual" onclick="event.stopPropagation(); downloadSingle(${i})">PDF</button>
+                    </div>`;
+            });
+            list.innerHTML = html;
+            section.classList.add('visible');
+        }
+
+        function selectResult(idx) {
+            // Save current edits before switching
+            syncCurrentEdits();
+
+            activeResultIdx = idx;
+            const result = enrichedResults[idx];
+            if (!result) return;
+
+            // Update active state
+            document.querySelectorAll('.result-item').forEach((el, i) => {
+                el.classList.toggle('active', i === idx);
+            });
+
+            // Show preview + edit toolbar
+            document.getElementById('preview-empty').style.display = 'none';
+            document.getElementById('edit-toolbar').style.display = 'flex';
+            const iframe = document.getElementById('preview');
+            iframe.style.display = '';
+            iframe.srcdoc = result.html;
+
+            // Apply edit mode after iframe loads
+            iframe.onload = () => {
+                if (editMode) enableEditing(iframe);
+            };
+        }
+
+        // ===== INLINE EDITING =====
+        // Structured fields that sync back to enrichedResults for JSON export
+        const SYNCED_FIELDS = {
+            'sector-pill': 'sectorPill',
+            'sector-subtitle': 'sectorSubtitle',
+            'challenge-title-1': 'challenges.0.title',
+            'challenge-desc-1': 'challenges.0.description',
+            'challenge-title-2': 'challenges.1.title',
+            'challenge-desc-2': 'challenges.1.description',
+            'challenge-title-3': 'challenges.2.title',
+            'challenge-desc-3': 'challenges.2.description',
+            'challenge-title-4': 'challenges.3.title',
+            'challenge-desc-4': 'challenges.3.description',
+        };
+
+        // All text elements to make editable (across all slides)
+        const EDITABLE_SELECTOR = 'h1, h2, h3, p, .sector-pill, .prospect-subtitle, .sector-subtitle, [class*="challenge-title"], [class*="challenge-desc"], [class*="presenter-name"], [class*="presenter-role"]';
+
+        const EDIT_CSS = `
+            [contenteditable="true"] {
+                outline: none;
+                transition: box-shadow 0.15s, background 0.15s;
+                border-radius: 4px;
+                cursor: text;
+            }
+            [contenteditable="true"]:hover {
+                box-shadow: 0 0 0 2px rgba(148, 130, 251, 0.3);
+                background: rgba(148, 130, 251, 0.05);
+            }
+            [contenteditable="true"]:focus {
+                box-shadow: 0 0 0 2px #9482fb;
+                background: rgba(148, 130, 251, 0.08);
+            }
+        `;
+
+        function toggleEditMode() {
+            editMode = !editMode;
+            const btn = document.getElementById('edit-toggle-btn');
+            btn.classList.toggle('active', editMode);
+            btn.textContent = editMode ? 'Bekijken' : 'Bewerken';
+
+            const iframe = document.getElementById('preview');
+            if (!iframe.contentDocument) return;
+
+            if (editMode) {
+                enableEditing(iframe);
+            } else {
+                syncCurrentEdits();
+                disableEditing(iframe);
+            }
+        }
+
+        function enableEditing(iframe) {
+            const doc = iframe.contentDocument;
+            if (!doc) return;
+
+            // Inject editing CSS
+            if (!doc.getElementById('edit-style')) {
+                const style = doc.createElement('style');
+                style.id = 'edit-style';
+                style.textContent = EDIT_CSS;
+                doc.head.appendChild(style);
+            }
+
+            // Make all text elements editable
+            doc.querySelectorAll(EDITABLE_SELECTOR).forEach(el => {
+                // Skip elements that only contain other elements (no direct text)
+                if (el.children.length > 0 && el.textContent.trim() === [...el.children].map(c => c.textContent).join('').trim()) {
+                    // Element has children that account for all text — skip container-only elements
+                    // But still make it editable if it has a class we track
+                    const isTracked = Object.keys(SYNCED_FIELDS).some(cls => el.classList.contains(cls));
+                    if (!isTracked) return;
+                }
+                el.contentEditable = 'true';
+                el.addEventListener('blur', handleFieldBlur);
+            });
+        }
+
+        function disableEditing(iframe) {
+            const doc = iframe.contentDocument;
+            if (!doc) return;
+
+            // Remove editing CSS
+            const style = doc.getElementById('edit-style');
+            if (style) style.remove();
+
+            // Remove contenteditable from all elements
+            doc.querySelectorAll('[contenteditable="true"]').forEach(el => {
+                el.contentEditable = 'false';
+                el.removeEventListener('blur', handleFieldBlur);
+            });
+        }
+
+        function handleFieldBlur(event) {
+            const el = event.target;
+            const result = enrichedResults[activeResultIdx];
+            if (!result) return;
+
+            // Sync known structured fields back to data model
+            for (const [className, path] of Object.entries(SYNCED_FIELDS)) {
+                if (el.classList.contains(className)) {
+                    setNestedValue(result, path, el.textContent.trim());
+                    break;
+                }
+            }
+
+            // Update result.html from current iframe DOM (captures ALL edits)
+            const iframe = document.getElementById('preview');
+            if (iframe.contentDocument) {
+                result.html = '<!DOCTYPE html>\n' + iframe.contentDocument.documentElement.outerHTML;
+            }
+        }
+
+        function syncCurrentEdits() {
+            if (activeResultIdx < 0 || !editMode) return;
+            const iframe = document.getElementById('preview');
+            const doc = iframe.contentDocument;
+            if (!doc) return;
+
+            const result = enrichedResults[activeResultIdx];
+            if (!result) return;
+
+            // Sync structured fields
+            for (const [className, path] of Object.entries(SYNCED_FIELDS)) {
+                const el = doc.querySelector(`.${className}`);
+                if (el) {
+                    setNestedValue(result, path, el.textContent.trim());
+                }
+            }
+
+            // Capture full HTML with all edits
+            result.html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+        }
+
+        function setNestedValue(obj, path, value) {
+            const parts = path.split('.');
+            let current = obj;
+            for (let i = 0; i < parts.length - 1; i++) {
+                const key = isNaN(parts[i]) ? parts[i] : parseInt(parts[i]);
+                current = current[key];
+                if (!current) return;
+            }
+            const lastKey = isNaN(parts[parts.length - 1]) ? parts[parts.length - 1] : parseInt(parts[parts.length - 1]);
+            current[lastKey] = value;
+        }
+
+        // ===== EXPORT / IMPORT =====
+        function exportJSON() {
+            if (enrichedResults.length === 0) {
+                alert('Geen resultaten om te exporteren.');
+                return;
+            }
+
+            // Sync current edits first
+            syncCurrentEdits();
+
+            const presenter = document.getElementById('presenter-select').value;
+            const exportData = {
+                version: 1,
+                exportDate: new Date().toISOString().slice(0, 10),
+                presenter,
+                results: enrichedResults.map(r => ({
+                    domain: r.domain,
+                    companyName: r.companyName,
+                    branch: r.branch,
+                    branchText: r.branchText,
+                    description: r.description,
+                    emailObservation: r.emailObservation,
+                    sectorPill: r.sectorPill,
+                    sectorSubtitle: r.sectorSubtitle,
+                    challenges: r.challenges,
+                    logoUrl: r.logoUrl,
+                })),
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `ZK-Presentaties-${exportData.exportDate}.json`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function importJSON(file) {
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (!data.results || !Array.isArray(data.results)) {
+                        alert('Ongeldig JSON formaat: geen results array gevonden.');
+                        return;
+                    }
+
+                    // Restore presenter selection
+                    if (data.presenter) {
+                        const select = document.getElementById('presenter-select');
+                        select.value = data.presenter;
+                        select.dispatchEvent(new Event('change'));
+                    }
+
+                    const presenter = getSelectedPresenter();
+
+                    // Regenerate HTML for each result
+                    enrichedResults = data.results.map(r => {
+                        const result = {
+                            domain: r.domain || '',
+                            companyName: r.companyName || '',
+                            branch: r.branch || '',
+                            branchText: r.branchText || '',
+                            description: r.description || '',
+                            emailObservation: r.emailObservation || r.description || '',
+                            sectorPill: r.sectorPill || '',
+                            sectorSubtitle: r.sectorSubtitle || '',
+                            challenges: r.challenges || [],
+                            logoUrl: r.logoUrl || '',
+                            html: '',
+                        };
+                        result.html = personalizeTemplate(result, presenter);
+                        return result;
+                    });
+
+                    if (enrichedResults.length > 0) {
+                        showResults();
+                        selectResult(0);
+                    }
+                } catch (err) {
+                    alert('Fout bij importeren: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+
+            // Reset file input so same file can be imported again
+            document.getElementById('import-file').value = '';
+        }
+
+        // ===== PDF DOWNLOAD =====
+        // Priority: 1) Local Puppeteer (dev server) → 2) Remote PDF service (Render) → 3) browser print dialog
+        const PDF_SERVICE_URL = 'https://zk-pdf-service.onrender.com';
+
+        // Track if PDF service is warmed up
+        let pdfServiceReady = false;
+
+        // Warm up PDF service on page load (Render free tier sleeps after 15 min)
+        async function warmupPdfService() {
+            try {
+                const resp = await fetch(`${PDF_SERVICE_URL}/`, { method: 'GET', mode: 'cors', signal: AbortSignal.timeout(60000) });
+                if (resp.ok) pdfServiceReady = true;
+            } catch {}
+        }
+        warmupPdfService();
+
+        // Generate PDF blob via Puppeteer (local dev or remote service)
+        async function generatePdfBlob(html) {
+            // Try local dev server first
+            try {
+                const resp = await fetch('/api/generate-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ html }),
+                });
+                const ct = resp.headers.get('content-type') || '';
+                if (resp.ok && ct.includes('application/pdf')) {
+                    return await resp.blob();
+                }
+            } catch {}
+
+            // Try remote PDF service (production)
+            try {
+                const resp = await fetch(`${PDF_SERVICE_URL}/api/generate-pdf`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ html }),
+                    signal: AbortSignal.timeout(60000),
+                });
+                const ct = resp.headers.get('content-type') || '';
+                if (resp.ok && ct.includes('application/pdf')) {
+                    return await resp.blob();
+                }
+            } catch {}
+
+            return null;
+        }
+
+        // Open HTML in new window and trigger browser print dialog
+        function openPrintWindow(html) {
+            const win = window.open('', '_blank');
+            if (!win) {
+                alert('Pop-up geblokkeerd. Sta pop-ups toe voor deze site om PDFs te downloaden.');
+                return;
+            }
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+
+            // Wait for fonts + images, then trigger print
+            const triggerPrint = () => {
+                setTimeout(() => {
+                    win.focus();
+                    win.print();
+                }, 800);
+            };
+
+            // Use document.fonts.ready if available
+            try {
+                win.document.fonts.ready.then(triggerPrint);
+            } catch {
+                setTimeout(triggerPrint, 2500);
+            }
+        }
+
+        // Single PDF download
+        async function downloadSingle(idx) {
+            const result = enrichedResults[idx];
+            if (!result) return;
+
+            const btn = document.querySelector(`#result-${idx} .download-individual`);
+            if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+            try {
+                // Try server-side Puppeteer first (dev server)
+                const pdfBlob = await generatePdfBlob(result.html);
+
+                if (pdfBlob) {
+                    // Direct download from server-generated PDF
+                    const safeName = result.companyName.replace(/[^a-zA-Z0-9\-_ ]/g, '').replace(/\s+/g, '-');
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(pdfBlob);
+                    a.download = `Zwarte-Kraai-${safeName}.pdf`;
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                } else {
+                    // Production: open in new window → print → save as PDF
+                    openPrintWindow(result.html);
+                }
+            } catch (err) {
+                console.error('PDF generation failed:', err);
+                // Fallback to print
+                openPrintWindow(result.html);
+            }
+
+            if (btn) { btn.disabled = false; btn.textContent = 'PDF'; }
+        }
+
+        // Show/update progress bar above the download button
+        function showProgress(text, current, total) {
+            let bar = document.getElementById('pdf-progress');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.id = 'pdf-progress';
+                bar.style.cssText = 'background:#1e1b4b; border:1px solid rgba(139,92,246,0.3); border-radius:12px; padding:12px 16px; margin-bottom:12px; text-align:center;';
+                const btn = document.getElementById('download-all-btn');
+                btn.parentNode.insertBefore(bar, btn);
+            }
+            const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+            bar.innerHTML = `<div style="color:#a78bfa; font-weight:600; font-size:14px; margin-bottom:6px;">${text}</div>`
+                + `<div style="background:rgba(255,255,255,0.1); border-radius:8px; height:8px; overflow:hidden;">`
+                + `<div style="background:linear-gradient(90deg,#8b5cf6,#06b6d4); height:100%; width:${pct}%; transition:width 0.3s; border-radius:8px;"></div></div>`
+                + `<div style="color:rgba(255,255,255,0.4); font-size:11px; margin-top:4px;">${current}/${total} PDFs</div>`;
+        }
+
+        function hideProgress() {
+            const bar = document.getElementById('pdf-progress');
+            if (bar) bar.remove();
+        }
+
+        // Bulk ZIP download with progress
+        async function downloadAllAsZip() {
+            if (enrichedResults.length === 0) return;
+            const total = enrichedResults.length;
+
+            const btn = document.getElementById('download-all-btn');
+            btn.disabled = true;
+
+            // If service not yet ready, wait for it with visible feedback
+            if (!pdfServiceReady) {
+                showProgress('PDF service opstarten (even geduld)...', 0, total);
+                const start = Date.now();
+                while (!pdfServiceReady && Date.now() - start < 60000) {
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+                // One more try if still not ready
+                if (!pdfServiceReady) {
+                    try {
+                        const resp = await fetch(`${PDF_SERVICE_URL}/`, { method: 'GET', mode: 'cors', signal: AbortSignal.timeout(30000) });
+                        if (resp.ok) pdfServiceReady = true;
+                    } catch {}
+                }
+            }
+
+            showProgress(`PDF 1/${total}: ${enrichedResults[0].companyName}...`, 0, total);
+
+            const firstBlob = await generatePdfBlob(enrichedResults[0].html);
+
+            if (firstBlob) {
+                try {
+                    const zip = new JSZip();
+                    const safeName0 = enrichedResults[0].companyName.replace(/[^a-zA-Z0-9\-_ ]/g, '').replace(/\s+/g, '-');
+                    zip.file(`Zwarte-Kraai-${safeName0}.pdf`, firstBlob);
+                    showProgress(`PDF 1/${total}: ${enrichedResults[0].companyName} ✓`, 1, total);
+
+                    for (let i = 1; i < enrichedResults.length; i++) {
+                        const result = enrichedResults[i];
+                        showProgress(`PDF ${i + 1}/${total}: ${result.companyName}...`, i, total);
+                        const pdfBlob = await generatePdfBlob(result.html);
+                        if (pdfBlob) {
+                            const safeName = result.companyName.replace(/[^a-zA-Z0-9\-_ ]/g, '').replace(/\s+/g, '-');
+                            zip.file(`Zwarte-Kraai-${safeName}.pdf`, pdfBlob);
+                        }
+                        showProgress(`PDF ${i + 1}/${total}: ${result.companyName} ✓`, i + 1, total);
+                    }
+
+                    showProgress('ZIP bestand maken...', total, total);
+                    const zipBlob = await zip.generateAsync({ type: 'blob' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(zipBlob);
+                    a.download = `Zwarte-Kraai-Presentaties-${new Date().toISOString().slice(0,10)}.zip`;
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                    hideProgress();
+                } catch (err) {
+                    console.error('ZIP generation failed:', err);
+                    hideProgress();
+                    alert('Fout bij ZIP generatie: ' + err.message);
+                }
+            } else {
+                hideProgress();
+                if (confirm(`PDF service is niet beschikbaar. Wil je alle ${total} presentaties openen in aparte tabbladen om ze via het printmenu als PDF op te slaan?`)) {
+                    for (const result of enrichedResults) {
+                        openPrintWindow(result.html);
+                        await new Promise(r => setTimeout(r, 500));
+                    }
+                }
+            }
+
+            btn.disabled = false;
+            btn.textContent = '\u2193 Download alles als ZIP';
+        }
+
+        // ===== MAIL TEMPLATE =====
+        function stripLegalForm(name) {
+            if (!name) return '';
+            return name.replace(/\s*(B\.?V\.?|N\.?V\.?|V\.?O\.?F\.?|C\.?V\.?|LLC|Ltd\.?|GmbH|Inc\.?|S\.?A\.?|S\.?L\.?)\s*$/i, '').trim();
+        }
+
+        function generateMailTemplate(result, presenter) {
+            const name = stripLegalForm(result.companyName);
+            const observation = result.emailObservation || result.description;
+
+            return `Beste ,
+
+Ik neem contact op omdat ik zag dat ${observation}.
+
+Bij Zwarte Kraai werken we dagelijks met B2B-bedrijven die meer willen halen uit hun klantrelaties en salesprocessen.
+
+Wat we vaak zien bij vergelijkbare bedrijven: de kennis over klantrelaties, pipeline en verkoopkansen zit verspreid over mailboxen, Excel en in de hoofden van medewerkers. Dat is waardevolle informatie die niet actief wordt benut.
+
+Concreet helpen wij bedrijven zoals ${name} met:
+
+\u2022 Centraal CRM - klanten, prospects en partners op 1 plek
+\u2022 Automatische signalen - verkoopkansen en follow-ups die anders gemist worden
+\u2022 Dashboards - real-time inzicht in sales performance
+\u2022 Sales training - uw team het maximale uit elk gesprek laten halen voor verhoogde conversie
+\u2022 CRM training - uw team het beste uit het systeem halen om beter op te volgen en meer deals binnen te halen
+
+Ik heb een korte presentatie gemaakt specifiek voor ${name}. Hierin laat ik zien hoe dit er concreet uitziet voor jullie situatie. Ook deel ik graag een klantverhaal van Wovar, die in deze video uitleggen wat voor hun de impact is geweest:
+
+https://zwartekraai.nl/wat-we-doen/case-studies
+
+Zou je komende week 20 minuten hebben voor een kort gesprek? Mocht ik niets horen, dan bel ik volgende week even op om te kijken wat we voor jullie kunnen betekenen.`;
+        }
+
+        function showMailTemplate(idx) {
+            const result = enrichedResults[idx];
+            if (!result) return;
+
+            const presenter = getSelectedPresenter();
+            const mailText = generateMailTemplate(result, presenter);
+
+            document.getElementById('mail-modal-title').textContent = `Mailtemplate \u2014 ${result.companyName}`;
+            document.getElementById('mail-textarea').value = mailText;
+            document.getElementById('mail-overlay').classList.add('visible');
+
+            // Reset copy button state
+            const copyBtn = document.getElementById('mail-copy-btn');
+            copyBtn.textContent = 'Kopieer naar klembord';
+            copyBtn.classList.remove('copied');
+        }
+
+        function closeMailModal() {
+            document.getElementById('mail-overlay').classList.remove('visible');
+        }
+
+        async function copyMailTemplate() {
+            const textarea = document.getElementById('mail-textarea');
+            const copyBtn = document.getElementById('mail-copy-btn');
+
+            try {
+                await navigator.clipboard.writeText(textarea.value);
+                copyBtn.textContent = 'Gekopieerd!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Kopieer naar klembord';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            } catch {
+                // Fallback for older browsers
+                textarea.select();
+                document.execCommand('copy');
+                copyBtn.textContent = 'Gekopieerd!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Kopieer naar klembord';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }
+        }
+
+        // ===== UTILITIES =====
+        function escapeAttr(str) {
+            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function getBaseUrl() {
+            const href = window.location.href;
+            return href.substring(0, href.lastIndexOf('/') + 1);
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

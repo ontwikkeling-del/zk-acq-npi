@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zwarte Kraai x [BEDRIJFSNAAM] | Naar voorspelbare groei met HubSpot</title>
+    <style>
+        /* ===== NOHEMI FONT FACES ===== */
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-ExtraLight.otf') format('opentype'); font-weight: 200; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-Light.otf') format('opentype'); font-weight: 300; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-Regular.otf') format('opentype'); font-weight: 400; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-Medium.otf') format('opentype'); font-weight: 500; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-SemiBold.otf') format('opentype'); font-weight: 600; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-Bold.otf') format('opentype'); font-weight: 700; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-ExtraBold.otf') format('opentype'); font-weight: 800; }
+        @font-face { font-family: 'Nohemi'; src: url('https://zwartekraai.nl/fonts/Nohemi-Black.otf') format('opentype'); font-weight: 900; }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        @page { size: A4; margin: 0; }
+        html { font-size: 15px; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        body { font-family: 'Nohemi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #141414; background: #e5e5e5; line-height: 1.6; font-weight: 400; padding: 12px 0; }
+
+        /* ===== PLACEHOLDER ===== */
+        .ph { background: #FFF9C4; padding: 2px 6px; border-radius: 3px; font-weight: 700; }
+
+        /* ===== PAGE STRUCTURE ===== */
+        .page { width: 210mm; min-height: 297mm; padding: 25mm 30mm 25mm 30mm; position: relative; page-break-after: always; background: #fff; margin: 0 auto 12px auto; box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+        .page:last-child { page-break-after: auto; margin-bottom: 0; }
+        @media print { body { background: #fff; margin: 0; padding: 0; } .page { margin: 0; box-shadow: none; height: 297mm; overflow: hidden; } }
+
+        /* ===== FOOTER ===== */
+        .footer { position: absolute; bottom: 10mm; left: 30mm; right: 30mm; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e0e0e0; padding-top: 10px; font-size: 11px; color: #999; }
+        .footer-left { font-style: italic; }
+        #cover-page { display: flex; flex-direction: column; }
+        #cover-page > footer.footer { position: static; margin-top: auto; left: auto; right: auto; bottom: auto; }
+
+        /* ===== TYPOGRAPHY ===== */
+        .page-title { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 6px; color: #141414; }
+        .page-title .accent { color: #9482fb; }
+        .page-subtitle { font-size: 16px; font-weight: 400; color: #666; margin-bottom: 18px; line-height: 1.5; }
+        .section-label { text-transform: uppercase; letter-spacing: 3px; font-size: 12px; color: #9482fb; font-weight: 700; margin-bottom: 12px; margin-top: 24px; }
+        h3 { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 8px; color: #141414; }
+        p { margin-bottom: 12px; line-height: 1.65; }
+
+        /* ===== HEADER BAR ===== */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header-bar img.zk-logo { height: 48px; width: auto; }
+        #cover-page .header-bar img.zk-logo { height: 96px; }
+        .client-logo-placeholder { width: 120px; height: 36px; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; font-weight: 600; }
+
+        /* ===== COVER ===== */
+        .cover-title { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 36px; font-weight: 900; line-height: 1.15; margin-bottom: 8px; color: #141414; }
+        .cover-subtitle { font-size: 20px; font-weight: 600; color: #9482fb; margin-bottom: 24px; }
+        .cover-quote { font-size: 18px; font-style: italic; color: #555; margin-bottom: 24px; padding-left: 20px; border-left: 3px solid #9482fb; }
+        .cover-text { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 14px; }
+        .cover-text strong { color: #141414; }
+
+        /* ===== CARDS ===== */
+        .card { border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px 24px; margin-bottom: 14px; background: #fff; }
+        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .card-text { font-size: 13px; color: #444; line-height: 1.6; }
+
+        /* ===== CALLOUT BOXES ===== */
+        .callout { border-left: 4px solid #9482fb; background: #f5f3ff; padding: 20px 24px; border-radius: 0 16px 16px 0; margin-bottom: 18px; }
+        .callout.red { border-left-color: #ff89f5; background: #fff5fd; }
+        .callout-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #141414; }
+        .callout-text { font-size: 13px; color: #444; line-height: 1.65; }
+        .callout ul { margin: 8px 0 0 18px; font-size: 13px; color: #444; }
+        .callout ul li { margin-bottom: 4px; line-height: 1.5; }
+
+        /* ===== GRIDS ===== */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+        /* ===== PILLAR BADGES ===== */
+        .pillar-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 6px; margin-right: 6px; margin-bottom: 4px; }
+        .pillar-badge.ai { background: rgba(0,225,255,0.12); color: #0099aa; border: 1px solid rgba(0,225,255,0.3); }
+        .pillar-badge.crm { background: rgba(148,130,251,0.12); color: #6a50fa; border: 1px solid rgba(148,130,251,0.3); }
+        .pillar-badge.training { background: rgba(90,215,117,0.12); color: #2d8a42; border: 1px solid rgba(90,215,117,0.3); }
+
+        /* ===== PILLAR CARDS ===== */
+        .pillar-card { border-radius: 16px; padding: 20px; text-align: center; }
+        .pillar-card.ai { background: rgba(0,225,255,0.06); border: 1px solid rgba(0,225,255,0.25); }
+        .pillar-card.crm { background: rgba(148,130,251,0.06); border: 1px solid rgba(148,130,251,0.25); }
+        .pillar-card.training { background: rgba(90,215,117,0.06); border: 1px solid rgba(90,215,117,0.25); }
+        .pillar-card .pillar-name { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #141414; }
+        .pillar-card .pillar-desc { font-size: 12px; color: #555; line-height: 1.5; }
+        .pillar-card .pillar-icon { margin-bottom: 10px; }
+        .pillar-card .pillar-icon svg { width: 32px; height: 32px; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+        .pillar-card.ai .pillar-icon svg { stroke: #00b8cc; }
+        .pillar-card.crm .pillar-icon svg { stroke: #9482fb; }
+        .pillar-card.training .pillar-icon svg { stroke: #3daa55; }
+
+        /* ===== FASE TIMELINE ===== */
+        .fase-timeline { margin-top: 20px; }
+        .fase-row { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; align-items: flex-start; }
+        .fase-row:last-child { border-bottom: none; }
+        .fase-number { width: 36px; height: 36px; border-radius: 50%; background: #9482fb; color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .fase-info { flex: 1; }
+        .fase-title { font-size: 15px; font-weight: 700; color: #141414; margin-bottom: 2px; }
+        .fase-period { font-size: 11px; color: #999; margin-bottom: 6px; }
+        .fase-desc { font-size: 12px; color: #555; line-height: 1.5; }
+
+        /* ===== FASE HEADERS ===== */
+        .fase-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #9482fb; }
+        .fase-header-number { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 14px; font-weight: 800; color: #9482fb; }
+        .fase-header-title { font-size: 17px; font-weight: 700; color: #141414; }
+        .fase-header-period { font-size: 12px; color: #999; margin-left: auto; }
+
+        /* ===== EXAMPLE BLOCKS ===== */
+        .example-block { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .example-block .example-content { flex: 1; border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; }
+        .example-block .example-title { font-size: 14px; font-weight: 700; color: #141414; margin-bottom: 6px; }
+        .example-block .example-desc { font-size: 12px; color: #555; line-height: 1.55; }
+
+        /* ===== FLOW DIAGRAM ===== */
+        .flow-steps { display: flex; align-items: center; gap: 6px; margin: 12px 0; flex-wrap: nowrap; }
+        .flow-step { flex: 1; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 10px; padding: 10px 8px; text-align: center; font-size: 10px; font-weight: 600; color: #141414; line-height: 1.35; }
+        .flow-step .step-num { display: block; font-size: 8px; color: #9482fb; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+        .flow-arrow { font-size: 14px; color: #9482fb; font-weight: 700; flex-shrink: 0; }
+
+        /* ===== HUB CARDS ===== */
+        .hub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+        .hub-card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 14px 16px; text-align: center; }
+        .hub-card .hub-icon { margin-bottom: 6px; display: flex; align-items: center; justify-content: center; }
+        .hub-card .hub-name { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 13px; font-weight: 700; color: #141414; margin-bottom: 4px; }
+        .hub-card .hub-desc { font-size: 11px; color: #666; line-height: 1.45; }
+
+        /* ===== STAT CARDS ===== */
+        .stat-card { border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; text-align: center; background: #fff; }
+        .stat-number { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 36px; font-weight: 900; color: #9482fb; line-height: 1; margin-bottom: 8px; }
+        .stat-label { font-size: 13px; font-weight: 600; color: #141414; margin-bottom: 4px; }
+        .stat-desc { font-size: 12px; color: #666; line-height: 1.4; }
+
+        /* ===== TEAM GRID ===== */
+        .team-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 16px; }
+        .team-member { text-align: center; padding: 10px 4px; border: 1px solid #e0e0e0; border-radius: 12px; }
+        .team-name { font-size: 11px; font-weight: 700; color: #141414; }
+        .team-role { font-size: 9px; color: #666; }
+
+        /* ===== INTELLIGENCE HUB ===== */
+        .intel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+        .intel-card { border: 1px solid #e0e0e0; border-radius: 16px; padding: 18px; }
+        .intel-card.problem { border-left: 4px solid #ff89f5; }
+        .intel-card.solution { border-left: 4px solid #9482fb; background: #f5f3ff; }
+        .intel-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .intel-label.problem { color: #ff89f5; }
+        .intel-label.solution { color: #9482fb; }
+        .intel-text { font-size: 13px; color: #444; line-height: 1.6; }
+
+        .dashboard-mock { border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; background: #fafafa; margin-bottom: 14px; }
+        .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+        .dash-stat { text-align: center; }
+        .dash-stat-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 4px; }
+        .dash-stat-value { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 24px; font-weight: 800; }
+        .signal-row { display: flex; gap: 10px; }
+        .signal-card { flex: 1; border-radius: 10px; padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 700; }
+        .signal-card.risk { background: rgba(255,137,245,0.1); color: #cc3dbe; border: 1px solid rgba(255,137,245,0.25); }
+        .signal-card.opportunity { background: rgba(90,215,117,0.1); color: #2d8a42; border: 1px solid rgba(90,215,117,0.25); }
+
+        /* ===== COMPARISON ===== */
+        .comparison-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 14px; }
+        .deliverables-list { list-style: none; padding: 0; }
+        .deliverables-list li { padding: 5px 0; font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px; }
+        .deliverables-list li::before { content: "\2713"; color: #5ad775; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+        .comparison-box { border-radius: 16px; padding: 18px; text-align: center; }
+        .comparison-box.others { background: #f9f9f9; border: 1px solid #e0e0e0; }
+        .comparison-box.zk { background: linear-gradient(135deg, #2a0042, #3d0059); color: #fff; }
+
+        /* ===== LOGO GRID ===== */
+        .logo-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin: 20px 0; }
+        .logo-box { height: 56px; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 8px 6px; }
+        .logo-box img { max-height: 24px; max-width: 100%; width: auto; object-fit: contain; }
+
+        /* ===== CASE STUDY ===== */
+        .case-card { background: linear-gradient(135deg, #2a0042, #3d0059, #2a0042); border-radius: 16px; padding: 24px; color: #fff; margin-bottom: 16px; }
+        .case-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00e1ff; margin-bottom: 6px; }
+        .case-title { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .case-stat { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 36px; font-weight: 900; color: #5ad775; margin: 8px 0; }
+        .case-text { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+        /* ===== STEPS ===== */
+        .step-card { display: flex; gap: 20px; border: 1px solid #e0e0e0; border-radius: 16px; padding: 18px 20px; margin-bottom: 12px; align-items: flex-start; }
+        .step-number-circle { width: 40px; height: 40px; border-radius: 50%; background: #9482fb; color: #fff; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        /* ===== BANNER ===== */
+        .bottom-banner { background: linear-gradient(135deg, #2a0042, #3d0059, #2a0042); color: #fff; padding: 20px 24px; border-radius: 16px; text-align: center; margin-top: 20px; }
+        .bottom-banner .highlight { color: #9482fb; font-weight: 700; }
+
+        /* ===== QUOTE ===== */
+        .quote-block { border-left: 3px solid #9482fb; padding: 14px 18px; margin: 16px 0; font-style: italic; font-size: 14px; color: #333; background: #f5f3ff; border-radius: 0 12px 12px 0; }
+        .quote-author { font-size: 12px; font-style: normal; color: #888; margin-top: 6px; font-weight: 600; }
+
+        /* ===== CTA ===== */
+        .cta-contact { display: flex; align-items: center; gap: 20px; padding: 18px 20px; background: #f9f9f9; border-radius: 16px; border: 1px solid #e0e0e0; }
+        .cta-photo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #9482fb; flex-shrink: 0; }
+        .cta-name { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; font-size: 16px; font-weight: 700; color: #141414; margin-bottom: 2px; }
+        .cta-role { font-size: 13px; color: #666; margin-bottom: 12px; }
+        .cta-btn.secondary { display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #fff; color: #141414; border: 1px solid #e0e0e0; }
+
+        /* ===== RESULT LIST ===== */
+        .result-list { list-style: none; padding: 0; }
+        .result-list li { padding: 5px 0; font-size: 13px; color: #333; display: flex; align-items: flex-start; gap: 8px; }
+        .result-list li::before { content: "\2713"; color: #5ad775; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE 1: COVER
+     ============================================================ -->
+<div class="page" id="cover-page">
+    <div style="display: inline-block; background: #f5f3ff; border: 1px solid #e0e0e0; color: #9482fb; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; padding: 4px 14px; border-radius: 4px; margin-bottom: 20px;">VERTROUWELIJK</div>
+
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <div style="margin-top: 40px;">
+        <div class="cover-title">Naar voorspelbare groei<br>met HubSpot</div>
+        <div class="cover-subtitle">Zwarte Kraai &times; <span class="ph">[BEDRIJFSNAAM]</span></div>
+    </div>
+
+    <div class="cover-quote">
+        &ldquo;Haal meer uit je klanten. Haal meer uit je team.&rdquo;
+    </div>
+
+    <p class="cover-text">
+        Gemiddeld besteden salesteams <strong>70% van hun tijd</strong> aan administratie in plaats van verkoop.
+        <span class="ph">[BEDRIJFSNAAM]</span> opereert in <span class="ph">[BRANCHE]</span> en bedient
+        <span class="ph">[DOELGROEP]</span>. Wat we zien: klanten vertrekken onopgemerkt, offertes worden
+        niet opgevolgd (<strong>47%</strong>), websitebezoekers blijven anoniem. Niet door gebrek aan wil,
+        maar door gebrek aan <strong>tijd, overzicht en structuur</strong>.
+    </p>
+
+    <p class="cover-text">
+        <span class="ph">[AI_TEKST]</span>
+    </p>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 1 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 2: RISICO & OPLOSSING
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Risico & <span class="accent">oplossing</span></h1>
+    <p class="page-subtitle">Waarom een professioneel CRM het verschil maakt</p>
+
+    <div class="callout red">
+        <div class="callout-title">Wat we zien bij jullie, en bij vrijwel elk groeiend B2B-bedrijf</div>
+        <ul>
+            <li>Klanten vertrekken zonder dat iemand het merkt</li>
+            <li>47% van offertes wordt niet opgevolgd</li>
+            <li>Het salesteam besteedt ~70% van de tijd aan administratie</li>
+            <li>Offertes kosten 20-30 minuten per stuk</li>
+            <li>Websitebezoekers blijven volledig anoniem</li>
+        </ul>
+    </div>
+
+    <div class="callout">
+        <div class="callout-title">Onze rol: HubSpot implementeren als commercieel fundament</div>
+        <p class="callout-text">
+            Wij implementeren HubSpot als het centrale systeem en voegen intelligentie toe: dataverrijking,
+            geautomatiseerde signalering, opvolgingsworkflows, offerte-automatisering en slimme follow-up.
+            Jullie team krijgt &eacute;&eacute;n plek voor alles. Wij zorgen dat het niet alleen <em>werkt</em>,
+            maar ook <em>meedenkt</em> en <em>stuurt</em>.
+        </p>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 2 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 3: AANPAK — DRIE PIJLERS & VIER FASES
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Onze aanpak: drie pijlers, <span class="accent">vier fases</span></h1>
+    <p class="page-subtitle">AI, HubSpot en training vormen de basis voor duurzame groei</p>
+
+    <div class="grid-3">
+        <div class="pillar-card ai">
+            <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1.27A7 7 0 0 1 13 23h-2a7 7 0 0 1-6.73-4H3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/><circle cx="9.5" cy="15.5" r="1"/><circle cx="14.5" cy="15.5" r="1"/></svg>
+            </div>
+            <div class="pillar-name">AI & Automatisering</div>
+            <div class="pillar-desc">Slimme signalen, automatische opvolging en dataverrijking die 24/7 voor jullie werken</div>
+        </div>
+        <div class="pillar-card crm">
+            <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div class="pillar-name">CRM & Implementatie</div>
+            <div class="pillar-desc">HubSpot implementeren als het centrale systeem dat jullie team slimmer maakt</div>
+        </div>
+        <div class="pillar-card training">
+            <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="pillar-name">Training & Coaching</div>
+            <div class="pillar-desc">Salesvaardigheden versterken met data als ruggengraat. Direct toepasbaar op de werkvloer</div>
+        </div>
+    </div>
+
+    <div class="section-label" style="margin-top: 16px;">TIJDLIJN</div>
+
+    <div class="fase-timeline">
+        <div class="fase-row">
+            <div class="fase-number">1</div>
+            <div class="fase-info">
+                <div class="fase-title">Fundament</div>
+                <div class="fase-period">Maand 1&ndash;2</div>
+                <div class="fase-desc">HubSpot inrichten, pipelines configureren, data importeren, team onboarden en eerste automatiseringen activeren.</div>
+                <div style="margin-top: 6px;">
+                    <span class="pillar-badge crm">CRM</span>
+                    <span class="pillar-badge training">Training</span>
+                </div>
+            </div>
+        </div>
+        <div class="fase-row">
+            <div class="fase-number">2</div>
+            <div class="fase-info">
+                <div class="fase-title">Versnelling</div>
+                <div class="fase-period">Maand 3&ndash;5</div>
+                <div class="fase-desc">Churn-detectie en lead-identificatie live. Offerte-automatisering actief. Cross-sell signalen geactiveerd.</div>
+                <div style="margin-top: 6px;">
+                    <span class="pillar-badge ai">AI</span>
+                    <span class="pillar-badge crm">CRM</span>
+                </div>
+            </div>
+        </div>
+        <div class="fase-row">
+            <div class="fase-number">3</div>
+            <div class="fase-info">
+                <div class="fase-title">Campagnes</div>
+                <div class="fase-period">Maand 6&ndash;9</div>
+                <div class="fase-desc">Gerichte campagnes, reactivatie slapende klanten. Salestraining pipeline management en klantretentie.</div>
+                <div style="margin-top: 6px;">
+                    <span class="pillar-badge ai">AI</span>
+                    <span class="pillar-badge training">Training</span>
+                </div>
+            </div>
+        </div>
+        <div class="fase-row">
+            <div class="fase-number">4</div>
+            <div class="fase-info">
+                <div class="fase-title">Strategisch management</div>
+                <div class="fase-period">Maand 10&ndash;12</div>
+                <div class="fase-desc">Overdracht commercieel management. Team is zelfstandig en datagedreven. Continue optimalisatie.</div>
+                <div style="margin-top: 6px;">
+                    <span class="pillar-badge crm">CRM</span>
+                    <span class="pillar-badge ai">AI</span>
+                    <span class="pillar-badge training">Training</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 3 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 4: AANPAK IN ACTIE — FASE 1 & 2
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Aanpak <span class="accent">in actie</span></h1>
+    <p class="page-subtitle">Concrete voorbeelden uit fase 1 en 2</p>
+
+    <!-- FASE 1 -->
+    <div class="fase-header">
+        <div class="fase-header-number">FASE 1</div>
+        <div class="fase-header-title">Fundament</div>
+        <div class="fase-header-period">Maand 1&ndash;2</div>
+    </div>
+
+    <div class="example-block">
+        <div class="example-content">
+            <div style="margin-bottom: 8px;"><span class="pillar-badge crm">CRM</span></div>
+            <div class="example-title">HubSpot implementatie & onboarding</div>
+            <div class="example-desc">
+                Wij implementeren HubSpot als het centrale platform: sales, marketing en service in &eacute;&eacute;n systeem. Pipelines configureren, data importeren, koppelingen bouwen met jullie ERP, webshop en e-mail.
+            </div>
+            <div class="hub-grid" style="margin-top: 10px; margin-bottom: 0;">
+                <div class="hub-card" style="padding: 10px 12px;">
+                    <div class="hub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9482fb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+                    <div class="hub-name" style="font-size: 12px;">Sales Hub</div>
+                    <div class="hub-desc" style="font-size: 10px;">Pipeline, deals, forecasting</div>
+                </div>
+                <div class="hub-card" style="padding: 10px 12px;">
+                    <div class="hub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                    <div class="hub-name" style="font-size: 12px;">Marketing Hub</div>
+                    <div class="hub-desc" style="font-size: 10px;">E-mail, formulieren, automation</div>
+                </div>
+                <div class="hub-card" style="padding: 10px 12px;">
+                    <div class="hub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00e1ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
+                    <div class="hub-name" style="font-size: 12px;">Service Hub</div>
+                    <div class="hub-desc" style="font-size: 10px;">Ticketing, kennisbank</div>
+                </div>
+                <div class="hub-card" style="padding: 10px 12px;">
+                    <div class="hub-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bd7fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+                    <div class="hub-name" style="font-size: 12px;">Operations Hub</div>
+                    <div class="hub-desc" style="font-size: 10px;">Datasync, rapportages</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example-block">
+        <div class="example-content">
+            <div style="margin-bottom: 8px;"><span class="pillar-badge training">Training</span></div>
+            <div class="example-title">Sales methodiek & CRM-adoptie</div>
+            <div class="example-desc">
+                Jullie team werkt nog zonder centraal CRM. Wij combineren HubSpot-training met consultative selling: het team leert niet alleen <em>hoe</em> ze met HubSpot werken, maar ook <em>waarom</em>. Van productverkoop naar adviesverkoop, met data als ruggengraat.
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="fase-header" style="margin-top: 16px;">
+        <div class="fase-header-number">FASE 2</div>
+        <div class="fase-header-title">Versnelling</div>
+        <div class="fase-header-period">Maand 3&ndash;5</div>
+    </div>
+
+    <div class="grid-2">
+        <div>
+            <div style="margin-bottom: 8px;"><span class="pillar-badge ai">AI</span></div>
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Churn-detectie flow</div>
+            <div class="flow-steps">
+                <div class="flow-step"><span class="step-num">1</span>Patroon Check</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-step"><span class="step-num">2</span>AI Analyse</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-step"><span class="step-num">3</span>Risico Score</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-step"><span class="step-num">4</span>Taak in HubSpot</div>
+            </div>
+            <p style="font-size: 11px; color: #555; margin-top: 8px; line-height: 1.5;">
+                AI analyseert orderpatronen per klant. Bij afwijking wordt automatisch een taak met context aangemaakt in HubSpot.
+            </p>
+        </div>
+        <div>
+            <div style="margin-bottom: 8px;"><span class="pillar-badge ai">AI</span></div>
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Website bezoeker &rarr; Lead</div>
+            <div class="flow-steps">
+                <div class="flow-step"><span class="step-num">1</span>Bezoek</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-step"><span class="step-num">2</span>Identificatie</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-step"><span class="step-num">3</span>Verrijking</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-step"><span class="step-num">4</span>Lead in HubSpot</div>
+            </div>
+            <p style="font-size: 11px; color: #555; margin-top: 8px; line-height: 1.5;">
+                Anonieme B2B-bezoekers worden ge&iuml;dentificeerd, verrijkt en als lead met opvolgtaak in HubSpot gezet.
+            </p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 4 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 5: AANPAK IN ACTIE — FASE 3 & 4
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Aanpak in actie: <span class="accent">verdieping</span></h1>
+    <p class="page-subtitle">Fase 3 en 4: van campagnes naar strategisch management</p>
+
+    <!-- FASE 3 -->
+    <div class="fase-header">
+        <div class="fase-header-number">FASE 3</div>
+        <div class="fase-header-title">Campagnes</div>
+        <div class="fase-header-period">Maand 6&ndash;9</div>
+    </div>
+
+    <div class="example-block">
+        <div class="example-content">
+            <div style="margin-bottom: 8px;"><span class="pillar-badge training">Training</span></div>
+            <div class="example-title">Pipeline management & Klantretentie</div>
+            <div class="example-desc">
+                Het team leert de pijplijn lezen, kansen prioriteren en betrouwbare forecasts maken. Bestaande klanten zijn 5&times; goedkoper dan nieuwe. Het team leert churn-signalen herkennen, proactief contact opnemen en cross-sell kansen benutten op basis van HubSpot-data.
+            </div>
+        </div>
+    </div>
+
+    <div class="example-block">
+        <div class="example-content">
+            <div style="margin-bottom: 8px;"><span class="pillar-badge ai">AI</span> <span class="pillar-badge crm">CRM</span></div>
+            <div class="example-title">E-mailcampagnes & Cross-sell intelligence</div>
+            <div class="example-desc">
+                Op basis van HubSpot-data bouwen wij gerichte campagnes: reactivatie van slapende klanten, cross-sell op basis van aankoophistorie, en seizoensgebonden acties.
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px;">
+                <div style="border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; text-align: center;">
+                    <div style="font-size: 12px; font-weight: 700; color: #141414; margin-bottom: 4px;">Klant koopt Product A</div>
+                    <div style="font-size: 11px; color: #666;">Heeft nog geen Product B</div>
+                    <div style="font-size: 11px; color: #5ad775; font-weight: 700; margin-top: 4px;">&#8594; Cross-sell signaal</div>
+                </div>
+                <div style="border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; text-align: center;">
+                    <div style="font-size: 12px; font-weight: 700; color: #141414; margin-bottom: 4px;">Klant bestelt dalend</div>
+                    <div style="font-size: 11px; color: #666;">Koopt nieuw assortiment niet</div>
+                    <div style="font-size: 11px; color: #5ad775; font-weight: 700; margin-top: 4px;">&#8594; Upsell kans</div>
+                </div>
+                <div style="border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; text-align: center;">
+                    <div style="font-size: 12px; font-weight: 700; color: #141414; margin-bottom: 4px;">Vergelijkbare klant koopt X</div>
+                    <div style="font-size: 11px; color: #666;">Deze klant nog niet</div>
+                    <div style="font-size: 11px; color: #5ad775; font-weight: 700; margin-top: 4px;">&#8594; Aanbeveling</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 4 -->
+    <div class="fase-header" style="margin-top: 16px;">
+        <div class="fase-header-number">FASE 4</div>
+        <div class="fase-header-title">Strategisch management</div>
+        <div class="fase-header-period">Maand 10&ndash;12</div>
+    </div>
+
+    <div class="example-block">
+        <div class="example-content">
+            <div style="margin-bottom: 8px;"><span class="pillar-badge crm">CRM</span></div>
+            <div class="example-title">Live dashboards & Strategisch management</div>
+            <div class="example-desc">
+                Volledige overdracht commercieel management. Real-time inzicht in pipeline, conversie, activiteit en omzet. Maandelijkse rapportages met strategisch advies. De organisatie stuurt proactief op data in plaats van reactief op gevoel.
+            </div>
+        </div>
+    </div>
+
+    <div class="callout" style="margin-top: 12px;">
+        <div class="callout-title">Resultaat na 12 maanden</div>
+        <p class="callout-text">
+            Een salesteam dat zelfstandig met HubSpot werkt, de pipeline beheert en structureel betere
+            gesprekken voert. Niet afhankelijk van &eacute;&eacute;n persoon, maar geborgd in het proces.
+        </p>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 5 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 6: WAARDE — RESULTATEN, TEAM & INVESTERING
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Wat het jullie <span class="accent">oplevert</span></h1>
+    <p class="page-subtitle">Concrete resultaten, een dedicated team en alles onder &eacute;&eacute;n dak</p>
+
+    <div class="grid-2">
+        <div class="stat-card">
+            <div class="stat-number">+10%</div>
+            <div class="stat-label">Meer uit bestaande klanten</div>
+            <div class="stat-desc">Door proactieve signalering en gestructureerde opvolging</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">+6%</div>
+            <div class="stat-label">Meer nieuwe klanten</div>
+            <div class="stat-desc">Door websitebezoeker-identificatie en automatische verrijking</div>
+        </div>
+    </div>
+
+    <div class="section-label" style="margin-top: 16px;">JULLIE TEAM</div>
+
+    <div class="team-grid">
+        <div class="team-member">
+            <img src="https://zwartekraai.nl/assets/erwin-dijkstra-new-CBI4auj_.jpg" alt="Erwin Dijkstra" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; display: block;">
+            <div class="team-name">Erwin Dijkstra</div>
+            <div class="team-role">CEO &amp; Strateeg</div>
+        </div>
+        <div class="team-member">
+            <img src="https://zwartekraai.nl/assets/dennis-nijborg-updated-DwIKalt5.jpg" alt="Dennis Nijborg" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; display: block;">
+            <div class="team-name">Dennis Nijborg</div>
+            <div class="team-role">CTO &amp; Techniek</div>
+        </div>
+        <div class="team-member">
+            <img src="https://zwartekraai.nl/assets/hoger-hamo-JBd-9InU.jpg" alt="Hoger Hamo" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; display: block;">
+            <div class="team-name">Hoger Hamo</div>
+            <div class="team-role">Tech Lead &amp; Dev</div>
+        </div>
+        <div class="team-member">
+            <img src="https://zwartekraai.nl/assets/migilio-tirtosentono-updated-C55K0N-i.jpg" alt="Migilio Tirtosentono" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; display: block;">
+            <div class="team-name">Migilio Tirtosentono</div>
+            <div class="team-role">Sales Trainer</div>
+        </div>
+        <div class="team-member">
+            <img src="https://zwartekraai.nl/assets/david-pantophlet-updated-fqoY03LJ.jpg" alt="David Pantophlet" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; display: block;">
+            <div class="team-name">David Pantophlet</div>
+            <div class="team-role">Head of AI</div>
+        </div>
+        <div class="team-member">
+            <img src="foto-danny.jpeg" alt="Danny Hoekstra" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; display: block;">
+            <div class="team-name">Danny Hoekstra</div>
+            <div class="team-role">RevOps Specialist</div>
+        </div>
+    </div>
+
+    <div class="section-label" style="margin-top: 12px;">JOUW INVESTERING</div>
+
+    <div class="comparison-grid">
+        <div>
+            <!-- Full variant -->
+            <div data-package="full">
+                <div style="display: inline-block; background: rgba(91,214,117,0.15); border-radius: 20px; padding: 3px 12px; margin-bottom: 10px;">
+                    <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #5bd675;">[PAKKET_LABEL]</span>
+                </div>
+                <ul class="deliverables-list">
+                    <li>8 uur training per maand</li>
+                    <li>Volledige CRM automation &amp; inrichting</li>
+                    <li>HubSpot implementatie en optimalisatie</li>
+                    <li>Data dashboards &amp; signalen</li>
+                    <li>On-site Q1 tweewekelijks</li>
+                    <li>12 maanden samenwerking</li>
+                </ul>
+            </div>
+            <!-- Lite variant -->
+            <div data-package="lite">
+                <div style="display: inline-block; background: rgba(91,214,117,0.15); border-radius: 20px; padding: 3px 12px; margin-bottom: 10px;">
+                    <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #5bd675;">[PAKKET_LABEL]</span>
+                </div>
+                <ul class="deliverables-list">
+                    <li>8 uur training per kwartaal</li>
+                    <li>6 extra CRM automations</li>
+                    <li>HubSpot implementatie en optimalisatie</li>
+                    <li>Data dashboards &amp; signalen</li>
+                    <li>Remote support</li>
+                    <li>12 maanden samenwerking</li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div style="background: #1a0a3e; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 10px;">
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.4); margin-bottom: 6px;">[PAKKET_LABEL]</div>
+                <div style="font-family: 'Arial Black', sans-serif; font-size: 32px; font-weight: 900; color: #5bd675;">[PRIJS]</div>
+                <div style="font-size: 12px; color: rgba(255,255,255,0.5);">per maand</div>
+                <div class="pricing-team-size" style="display: none; font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px;">Berekend voor [SALES_COUNT] sales medewerkers</div>
+            </div>
+            <div class="comparison-box others" style="margin-bottom: 10px;">
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #999; margin-bottom: 6px;">Ter vergelijking</div>
+                <div style="font-family: 'Arial Black', sans-serif; font-size: 22px; font-weight: 900; color: #ff89f5;">3x tot 4x</div>
+                <div style="font-size: 12px; color: #ff89f5; font-weight: 700;">duurder bij losse inhuur</div>
+            </div>
+            <div style="background: rgba(91,214,117,0.08); border: 1px solid rgba(91,214,117,0.2); border-radius: 10px; padding: 10px; text-align: center;">
+                <div style="font-size: 12px; font-weight: 700; color: #5bd675;">No Cure No Pay</div>
+                <div style="font-size: 10px; color: #999;">Geen resultaat? Geen factuur.</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 6 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 7: WAARDE — SALES INTELLIGENCE HUB
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Sales Data <span class="accent">Intelligence Hub</span></h1>
+    <p class="page-subtitle">E&eacute;n overzicht. Alle data. Proactieve actie.</p>
+
+    <div class="intel-grid">
+        <div class="intel-card problem">
+            <div class="intel-label problem">Het probleem</div>
+            <div class="intel-text">
+                Rapportages uit boekhouding, Excel en losse systemen. Allemaal losse puzzelstukjes. Beslissingen op onderbuikgevoel. Geen centraal overzicht.
+            </div>
+        </div>
+        <div class="intel-card solution">
+            <div class="intel-label solution">De oplossing</div>
+            <div class="intel-text">
+                HubSpot als &eacute;&eacute;n bron van waarheid. Alle databronnen gecombineerd in realtime dashboards. Proactieve signalen die je team direct in actie zetten.
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-mock">
+        <div class="dashboard-stats">
+            <div class="dash-stat">
+                <div class="dash-stat-label">Pipeline</div>
+                <div class="dash-stat-value" style="color: #9482fb;">847K</div>
+            </div>
+            <div class="dash-stat">
+                <div class="dash-stat-label">Conversie</div>
+                <div class="dash-stat-value" style="color: #5ad775;">34%</div>
+            </div>
+            <div class="dash-stat">
+                <div class="dash-stat-label">Calls</div>
+                <div class="dash-stat-value" style="color: #141414;">127</div>
+            </div>
+            <div class="dash-stat">
+                <div class="dash-stat-label">Offertes</div>
+                <div class="dash-stat-value" style="color: #141414;">18</div>
+            </div>
+        </div>
+        <div style="border-top: 1px solid #e0e0e0; padding-top: 12px;">
+            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #999; margin-bottom: 10px;">Automatische signalen</div>
+            <div class="signal-row">
+                <div class="signal-card risk">3 deals risico op verlies</div>
+                <div class="signal-card opportunity">5 upsell kansen gedetecteerd</div>
+                <div class="signal-card opportunity">8 websitebezoekers ge&iuml;dentificeerd</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 14px;">
+        <div class="card" style="padding: 16px; margin-bottom: 0;">
+            <div style="font-size: 13px; font-weight: 700; color: #9482fb; margin-bottom: 6px;">Betere beslissingen</div>
+            <div style="font-size: 12px; color: #555; line-height: 1.5;">Sturen op feiten in plaats van gevoel. &Eacute;&eacute;n dashboard met alle data gecombineerd.</div>
+        </div>
+        <div class="card" style="padding: 16px; margin-bottom: 0;">
+            <div style="font-size: 13px; font-weight: 700; color: #9482fb; margin-bottom: 6px;">Vroege signalen</div>
+            <div style="font-size: 12px; color: #555; line-height: 1.5;">Risico's en kansen worden automatisch gesignaleerd. Jullie team hoeft niet te zoeken.</div>
+        </div>
+    </div>
+
+    <div class="quote-block" style="margin-top: 16px;">
+        &ldquo;Grip op groei begint met inzicht. Niet achteraf, maar realtime.&rdquo;
+        <div class="quote-author">&ndash; [PRESENTER_NAME], Zwarte Kraai</div>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 7 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 8: WAARDE — KLANTEN & BEWIJS
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title">Zij gingen jullie <span class="accent">voor</span></h1>
+    <p class="page-subtitle">Vertrouwd door B2B-bedrijven door heel Nederland</p>
+
+    <div class="logo-grid">
+        <div class="logo-box"><img src="logos/floer-logo-D86of5Xo.png" alt="FLOER"></div>
+        <div class="logo-box"><img src="logos/bmtec-logo-B-7ZPvKy.png" alt="BMTEC"></div>
+        <div class="logo-box"><img src="logos/reposlogo.svg" alt="Repos"></div>
+        <div class="logo-box"><img src="logos/royal-de-vries-logo-DE5HruD_.png" alt="Royal De Vries"></div>
+        <div class="logo-box"><img src="logos/noboringsuitcases logo.png" alt="NoBoringSuitcases"></div>
+        <div class="logo-box"><img src="logos/Wovar-logo-zwart.png" alt="Wovar"></div>
+        <div class="logo-box"><img src="logos/horecabier logo.png" alt="Horecabier" style="max-height: 48px;"></div>
+        <div class="logo-box"><img src="logos/de vries trappen.svg" alt="De Vries Trappen"></div>
+        <div class="logo-box"><img src="logos/chocobezorgd-logo-B5U2XKA9.png" alt="Chocoladebezorgd"></div>
+        <div class="logo-box"><img src="logos/jc-logo-hNkYV-H9.png" alt="JC-Electronics"></div>
+        <div class="logo-box"><img src="logos/marlan logo.png" alt="Marlan"></div>
+        <div class="logo-box"><img src="logos/fotocadeau logo.png" alt="Fotocadeau"></div>
+        <div class="logo-box"><img src="logos/scholma-logo-CzDUu-0H.webp" alt="Scholma"></div>
+        <div class="logo-box"><img src="logos/kunstgrasonline logo.svg" alt="Kunstgras-online.nl"></div>
+    </div>
+
+    <!-- Wovar Case Study -->
+    <div class="case-card">
+        <div class="case-label">CASE STUDY</div>
+        <div style="display: flex; gap: 24px; align-items: center;">
+            <div style="flex: 1;">
+                <div class="case-title">Wovar</div>
+                <div class="case-stat">2x</div>
+                <div style="font-size: 16px; font-weight: 700; color: #5ad775; margin-bottom: 8px;">B2B omzet verdubbeld in 12 maanden</div>
+                <div class="case-text">
+                    Door de combinatie van CRM-optimalisatie, geautomatiseerde opvolging, churn-detectie en salestraining heeft Wovar haar B2B-omzet verdubbeld. Het team werkt datagedreven en proactief.
+                </div>
+            </div>
+            <div style="flex-shrink: 0;">
+                <img src="logos/Wovar-logo-zwart.png" alt="Wovar" style="height: 40px; filter: invert(1); opacity: 0.7;">
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-banner" style="margin-top: 12px;">
+        <p style="font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #fff;">
+            Partner in transformatie. <span class="highlight">No Cure No Pay.</span>
+        </p>
+        <p style="font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 0;">
+            Wij geloven in onze aanpak. Daarom werken wij op basis van resultaat. Geen resultaat? Geen factuur.
+        </p>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 8 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+
+<!-- ============================================================
+     PAGE 9: VERVOLGSTAPPEN
+     ============================================================ -->
+<div class="page">
+    <div class="header-bar">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="zk-logo">
+        <div class="client-logo-placeholder"><span class="ph">[LOGO_URL]</span></div>
+    </div>
+
+    <h1 class="page-title" style="margin-top: 16px;">Vervolg<span class="accent">stappen</span></h1>
+    <p class="page-subtitle">Samen aan de slag</p>
+
+    <div class="card" style="padding: 24px 28px; margin-bottom: 18px;">
+        <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+            <div class="step-number-circle">1</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 3px;">Kennismaking met de directie</h3>
+                <p style="font-size: 13px; color: #555; margin-bottom: 0;">Korte sessie om ambities, uitdagingen en verwachtingen te bespreken. Wij luisteren en stellen de juiste vragen.</p>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+            <div class="step-number-circle">2</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 3px;">Technische quickscan van huidige systemen en datastromen</h3>
+                <p style="font-size: 13px; color: #555; margin-bottom: 0;">Analyse van jullie huidige werkwijze, tools en data. Waar liggen de kansen? Waar lekt omzet weg?</p>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 0;">
+            <div class="step-number-circle">3</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 3px;">Voorstel op maat met concrete aanpak, KPI's en tijdlijn</h3>
+                <p style="font-size: 13px; color: #555; margin-bottom: 0;">Een helder plan met meetbare doelen, duidelijke tijdlijn en transparante kosten. Geen verrassingen.</p>
+            </div>
+        </div>
+    </div>
+
+    <p style="text-align: center; font-style: italic; color: #9482fb; font-size: 15px; font-weight: 600; margin-bottom: 18px;">
+        Wij werken op basis van No Cure No Pay.
+    </p>
+
+    <!-- CTA Contact Section -->
+    <div class="cta-contact">
+        <img src="[PRESENTER_PHOTO]" alt="[PRESENTER_NAME]" class="cta-photo">
+        <div>
+            <div class="cta-name">[PRESENTER_NAME]</div>
+            <div class="cta-role">[PRESENTER_ROLE]</div>
+            <div>
+                <span class="cta-btn secondary">[PRESENTER_PHONE]</span>
+                <span class="cta-btn secondary">[PRESENTER_EMAIL]</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 12px;">
+        <p style="font-size: 13px; color: #666; margin-bottom: 0;">
+            Zwarte Kraai | <span style="color: #9482fb; font-weight: 600;">zwartekraai.nl</span>
+        </p>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-left">Zwarte Kraai | Wij geven jouw organisatie vleugels om hoger te vliegen</span>
+        <span class="footer-right">Pagina 9 | Vertrouwelijk</span>
+    </footer>
+</div>
+
+</body>
+</html>

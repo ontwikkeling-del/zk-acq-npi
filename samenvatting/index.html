@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samenvatting Generator — Zwarte Kraai</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 420px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            flex-shrink: 0;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+        }
+
+        .sidebar-header {
+            padding: 24px 28px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sidebar-header h1 {
+            font-size: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #9482fb;
+        }
+
+        .sidebar-header p {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 28px;
+        }
+
+        .sidebar-content::-webkit-scrollbar { width: 4px; }
+        .sidebar-content::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-content::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+
+        /* ===== IMPORT / EXPORT BUTTONS ===== */
+        .io-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .import-btn, .export-btn {
+            flex: 1;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
+        .import-btn {
+            border: 1px dashed rgba(91,214,117,0.4);
+            background: rgba(91,214,117,0.06);
+            color: #3daa55;
+        }
+
+        .import-btn:hover {
+            border-color: #3daa55;
+            color: #2d8a42;
+            background: rgba(91,214,117,0.12);
+        }
+
+        .export-btn {
+            border: 1px dashed rgba(148,130,251,0.4);
+            background: rgba(148,130,251,0.06);
+            color: #9482fb;
+        }
+
+        .export-btn:hover {
+            border-color: #9482fb;
+            color: #7c6ae8;
+            background: rgba(148,130,251,0.12);
+        }
+
+        .import-status {
+            font-size: 10px;
+            color: #3daa55;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .import-status.visible { display: block; }
+
+        /* ===== VERSION TOGGLE ===== */
+        .version-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .version-btn {
+            flex: 1;
+            padding: 11px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f9fafb;
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
+        .version-btn:hover {
+            border-color: #d1d5db;
+            color: #6b7280;
+        }
+
+        .version-btn.active {
+            background: #9482fb;
+            border-color: #9482fb;
+            color: #fff;
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #9482fb;
+            background: #fff;
+        }
+
+        .form-group input[type="text"]::placeholder,
+        .form-group textarea::placeholder {
+            color: #d1d5db;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 56px;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        /* ===== FILE UPLOAD ROW ===== */
+        .upload-row {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
+        }
+
+        .upload-row input[type="text"] {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .upload-btn {
+            padding: 10px 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .upload-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+            border-color: #d1d5db;
+        }
+
+        .remove-btn {
+            padding: 10px 12px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            color: #f87171;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            line-height: 1;
+        }
+
+        .remove-btn:hover {
+            background: #fee2e2;
+            color: #ef4444;
+            border-color: #fca5a5;
+        }
+
+        /* ===== PREVIEW BOXES ===== */
+        .logo-preview {
+            width: 100%;
+            height: 48px;
+            background: #f9fafb;
+            border: 1px dashed #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .logo-preview img {
+            max-height: 36px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .logo-preview span {
+            font-size: 10px;
+            color: #d1d5db;
+        }
+
+        .bg-preview {
+            width: 100%;
+            height: 64px;
+            background: #f9fafb;
+            border: 1px dashed #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .bg-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 7px;
+        }
+
+        .bg-preview span {
+            font-size: 10px;
+            color: #d1d5db;
+        }
+
+        /* ===== AI BOX ===== */
+        .ai-box {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #faf9ff;
+            padding: 14px;
+        }
+
+        .ai-box textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            resize: vertical;
+            min-height: 72px;
+            transition: border-color 0.2s;
+        }
+
+        .ai-box textarea:focus { border-color: #9482fb; }
+        .ai-box textarea::placeholder { color: #d1d5db; }
+
+        .ai-generate-btn {
+            width: 100%;
+            padding: 9px 16px;
+            border: 1px solid #9482fb;
+            border-radius: 8px;
+            background: #9482fb;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            margin-top: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .ai-generate-btn:hover { background: #7c6ae8; border-color: #7c6ae8; }
+        .ai-generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .ai-generate-btn.loading {
+            background: #b8aef5;
+            border-color: #b8aef5;
+        }
+
+        .ai-result {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #fff;
+            border: 1px solid #d4cffa;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #1f2937;
+            min-height: 48px;
+            resize: vertical;
+            width: 100%;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .ai-result:focus { border-color: #9482fb; }
+        .ai-result::placeholder { color: #d1d5db; }
+
+        .ai-key-row {
+            display: flex;
+            gap: 6px;
+            align-items: stretch;
+            margin-top: 8px;
+        }
+
+        .ai-key-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 7px 10px;
+            font-size: 11px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-family: inherit;
+            color: #6b7280;
+            outline: none;
+        }
+
+        .ai-key-row input:focus { border-color: #9482fb; }
+
+        .ai-key-row button {
+            padding: 7px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #6b7280;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .ai-key-row button:hover { background: #e5e7eb; }
+
+        .ai-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hidden { display: none !important; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 24px 0;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9482fb;
+            margin-bottom: 16px;
+        }
+
+        /* ===== PRESENTER PREVIEW ===== */
+        .presenter-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .presenter-preview img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .presenter-preview .info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .presenter-preview .info .name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .presenter-preview .info .role {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* ===== FOOTER ===== */
+        .sidebar-footer {
+            padding: 20px 28px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #9482fb, #7b6ae0);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: inherit;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #a594ff, #8b7af0);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(148,130,251,0.3);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .download-hint {
+            text-align: center;
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 10px;
+        }
+
+        /* ===== PREVIEW ===== */
+        .preview-area {
+            flex: 1;
+            background: #e5e7eb;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-area iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #e5e5e5;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        .loading-overlay.loaded {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(148,130,251,0.2);
+            border-top-color: #9482fb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .error-box {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .error-box h2 {
+            font-size: 16px;
+            color: #ef4444;
+            margin-bottom: 12px;
+        }
+
+        .error-box p {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .error-box code {
+            display: block;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #9482fb;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Samenvatting Generator</h1>
+            <p>Gepersonaliseerde follow-up PDF's voor klanten</p>
+        </div>
+
+        <div class="sidebar-content">
+            <!-- Import / Export config -->
+            <div class="io-row">
+                <button class="import-btn" onclick="document.getElementById('json-file').click()">
+                    &#8593; Importeer
+                </button>
+                <button class="export-btn" onclick="exportConfig()">
+                    &#8595; Exporteer
+                </button>
+            </div>
+            <input type="file" id="json-file" accept=".json" style="display:none" onchange="importConfig(this)">
+            <div class="import-status" id="import-status"></div>
+
+            <!-- Version toggle -->
+            <div class="version-toggle">
+                <button class="version-btn active" data-version="met-crm" onclick="setVersion('met-crm')">Met CRM</button>
+                <button class="version-btn" data-version="zonder-crm" onclick="setVersion('zonder-crm')">Zonder CRM</button>
+            </div>
+
+            <div class="section-title">Klantgegevens</div>
+
+            <div class="form-group">
+                <label>Bedrijfsnaam</label>
+                <input type="text" id="bedrijfsnaam" placeholder="Bijv. Oliehoorn" oninput="debouncedUpdate()">
+            </div>
+
+            <div class="form-group" id="grp-crm-naam">
+                <label>Huidig CRM / ERP systeem</label>
+                <input type="text" id="crm-naam" placeholder="Bijv. SAP, Salesforce, Exact" oninput="debouncedUpdate()">
+            </div>
+
+            <div class="form-group">
+                <label>Branche</label>
+                <select id="branche" onchange="onBrancheChange()">
+                    <option value="">Kies een branche...</option>
+                    <optgroup label="Food">
+                        <option value="food">Food & Beverages</option>
+                        <option value="food-horeca">Horeca Leveranciers</option>
+                        <option value="food-retail">Retail Food & FMCG</option>
+                    </optgroup>
+                    <optgroup label="Productie">
+                        <option value="productie">Productie & Industrie</option>
+                        <option value="productie-metaal">Metaal & Kunststof</option>
+                        <option value="productie-chemie">Chemie & Procesindustrie</option>
+                    </optgroup>
+                    <optgroup label="Bouw">
+                        <option value="bouw">Bouw & Installatie</option>
+                        <option value="bouw-installatie">Installatietechniek</option>
+                    </optgroup>
+                    <optgroup label="Techniek">
+                        <option value="techniek">Techniek & Electronica</option>
+                        <option value="techniek-it">IT & Telecom</option>
+                    </optgroup>
+                    <optgroup label="Handel">
+                        <option value="handel">Handel & Wholesale</option>
+                        <option value="handel-import">Import & Export</option>
+                    </optgroup>
+                    <option value="agri">Agri & Tuinbouw</option>
+                    <option value="dienstverlening">Zakelijke Dienstverlening</option>
+                    <option value="logistiek">Transport & Logistiek</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Doelgroep</label>
+                <input type="text" id="doelgroep" placeholder="Wordt automatisch ingevuld bij branche" oninput="debouncedUpdate()">
+            </div>
+
+            <hr class="divider">
+            <div class="section-title">AI Bevindingen</div>
+
+            <div class="ai-box" id="ai-box">
+                <div class="ai-label">Jouw bevindingen (stichworden of zinnen)</div>
+                <textarea id="ai-bevindingen" placeholder="Bijv. CRM wordt nauwelijks gebruikt, sales werkt met Excel, pipeline niet up to date, geen opvolging van leads"></textarea>
+
+                <button class="ai-generate-btn" id="ai-generate-btn" onclick="generateWithAI()">
+                    Verwerk met AI
+                </button>
+
+                <div class="ai-label hidden" style="margin-top: 12px;" id="ai-result-label">Gegenereerde tekst (bewerkbaar)</div>
+                <textarea class="ai-result hidden" id="ai-result" placeholder="Hier verschijnt de gegenereerde tekst..." oninput="onAiResultChange()"></textarea>
+
+                <div class="ai-key-row" id="ai-key-row" style="display:none;">
+                    <input type="password" id="ai-key-input" placeholder="OpenAI API key (sk-...)">
+                    <button onclick="saveAiKey()">Opslaan</button>
+                </div>
+            </div>
+
+            <hr class="divider">
+            <div class="section-title">Presentator</div>
+
+            <div class="form-group">
+                <label>Kies presentator</label>
+                <select id="presenter-select" onchange="onPresenterChange()">
+                    <option value="0">Erwin Dijkstra — Founder & CEO</option>
+                    <option value="1">Dennis Nijborg — Founder & CTO</option>
+                    <option value="2">Hoger Hamo — AI Automation Specialist</option>
+                    <option value="3">Migilio Tirtosentono — Senior Sales Professional</option>
+                    <option value="4">David Pantophlet — Head of AI</option>
+                    <option value="5">Danny Hoekstra — RevOps Specialist</option>
+                </select>
+                <div class="presenter-preview" id="presenter-preview">
+                    <img src="https://zwartekraai.nl/assets/erwin-dijkstra-new-CBI4auj_.jpg" alt="">
+                    <div class="info">
+                        <div class="name">Erwin Dijkstra</div>
+                        <div class="role">Founder & CEO</div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+            <div class="section-title">Pakket & Investering</div>
+
+            <div class="form-group">
+                <label>Pakket</label>
+                <div class="version-toggle" style="margin-bottom: 0;">
+                    <button class="version-btn active" id="pkg-full-btn" data-pkg="full" onclick="setPackage('full')">Full</button>
+                    <button class="version-btn" id="pkg-lite-btn" data-pkg="lite" onclick="setPackage('lite')">Lite</button>
+                </div>
+                <div class="lite-warning" id="lite-warning" style="display:none; margin-top: 6px; padding: 8px 12px; background: #fef3cd; border: 1px solid #ffc107; border-radius: 8px; font-size: 11px; color: #856404;">
+                    Lite is alleen beschikbaar bij minder dan 3 sales medewerkers
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Aantal sales medewerkers</label>
+                <input type="number" id="sales-count" value="3" min="1" max="20" oninput="onSalesCountChange()">
+            </div>
+
+            <div class="form-group">
+                <div style="background: #1a0a3e; border-radius: 10px; padding: 12px 16px; text-align: center;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Maandbedrag</div>
+                    <div id="price-preview" style="font-size: 22px; font-weight: 900; color: #5bd675;"></div>
+                </div>
+            </div>
+
+            <hr class="divider">
+            <div class="section-title">Logo & Achtergrond</div>
+
+            <div class="form-group">
+                <label>Klant logo</label>
+                <div class="upload-row">
+                    <input type="text" id="logo-url" placeholder="URL of upload hiernaast" oninput="debouncedUpdate()">
+                    <button class="upload-btn" onclick="document.getElementById('logo-file').click()">Upload</button>
+                    <button class="remove-btn" id="logo-remove" onclick="removeLogo()" style="display:none" title="Verwijder">&#10005;</button>
+                </div>
+                <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
+                <div class="logo-preview" id="logo-preview">
+                    <span>Logo preview</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Cover achtergrond (pagina 1)</label>
+                <div class="upload-row">
+                    <input type="text" id="bg-url" placeholder="URL of upload hiernaast" oninput="debouncedUpdate()">
+                    <button class="upload-btn" onclick="document.getElementById('bg-file').click()">Upload</button>
+                    <button class="remove-btn" id="bg-remove" onclick="removeBg()" style="display:none" title="Verwijder">&#10005;</button>
+                </div>
+                <input type="file" id="bg-file" accept="image/*" style="display:none" onchange="handleBgUpload(this)">
+                <div class="bg-preview" id="bg-preview">
+                    <span>Achtergrond preview</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="download-btn" onclick="downloadPDF()">&#8595; Download als PDF</button>
+            <div class="download-hint">Kies "Opslaan als PDF" in het printvenster</div>
+        </div>
+    </div>
+
+    <div class="preview-area">
+        <div class="loading-overlay" id="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Templates laden...</div>
+        </div>
+        <iframe id="preview"></iframe>
+    </div>
+
+    <script>
+        let currentVersion = 'met-crm';
+        let currentPackage = 'full';
+        let templates = {};
+        let updateTimer = null;
+
+        // Stored base64 images (from upload or import)
+        let logoBase64 = '';
+        let bgBase64 = '';
+
+        // Pricing calculation (same as React app)
+        function calculatePrice(pkg, salesCount) {
+            if (pkg === 'lite') return 2500;
+            const base = 3495;
+            if (salesCount <= 5) return base;
+            const extra = Math.ceil((salesCount - 5) / 2);
+            return base + extra * 1250;
+        }
+
+        function formatPrice(amount) {
+            return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(amount);
+        }
+
+        function getSalesCount() {
+            return parseInt(document.getElementById('sales-count').value, 10) || 3;
+        }
+
+        function setPackage(pkg) {
+            const salesCount = getSalesCount();
+            if (pkg === 'lite' && salesCount >= 3) {
+                document.getElementById('lite-warning').style.display = '';
+                return;
+            }
+            document.getElementById('lite-warning').style.display = 'none';
+            currentPackage = pkg;
+            document.getElementById('pkg-full-btn').classList.toggle('active', pkg === 'full');
+            document.getElementById('pkg-lite-btn').classList.toggle('active', pkg === 'lite');
+            updatePricePreview();
+            debouncedUpdate();
+        }
+
+        function onSalesCountChange() {
+            const salesCount = getSalesCount();
+            if (salesCount >= 3 && currentPackage === 'lite') {
+                setPackage('full');
+            }
+            document.getElementById('lite-warning').style.display = (currentPackage === 'lite' || salesCount < 3) ? 'none' : 'none';
+            updatePricePreview();
+            debouncedUpdate();
+        }
+
+        function updatePricePreview() {
+            const price = calculatePrice(currentPackage, getSalesCount());
+            document.getElementById('price-preview').textContent = formatPrice(price) + ' /mnd';
+        }
+
+        // Team members data
+        const TEAM_MEMBERS = [
+            { name: 'Erwin Dijkstra', role: 'Founder & CEO', email: 'erwin@zwartekraai.nl', phone: '+31 6 38 40 86 84', photo: 'https://zwartekraai.nl/assets/erwin-dijkstra-new-CBI4auj_.jpg' },
+            { name: 'Dennis Nijborg', role: 'Founder & CTO', email: 'dennis@zwartekraai.nl', phone: '+31 6 46 36 64 41', photo: 'https://zwartekraai.nl/assets/dennis-nijborg-updated-DwIKalt5.jpg' },
+            { name: 'Hoger Hamo', role: 'AI Automation Specialist', email: 'hoger@zwartekraai.nl', phone: '', photo: 'https://zwartekraai.nl/assets/hoger-hamo-JBd-9InU.jpg' },
+            { name: 'Migilio Tirtosentono', role: 'Senior Sales Professional & Trainer', email: 'migilio@zwartekraai.nl', phone: '+31 6 23 94 58 09', photo: 'https://zwartekraai.nl/assets/migilio-tirtosentono-updated-C55K0N-i.jpg' },
+            { name: 'David Pantophlet', role: 'Head of AI', email: 'david@zwartekraai.nl', phone: '', photo: 'https://zwartekraai.nl/assets/david-pantophlet-updated-fqoY03LJ.jpg' },
+            { name: 'Danny Hoekstra', role: 'RevOps Specialist', email: 'danny@zwartekraai.nl', phone: '+31 6 21 57 35 59', photo: '/foto-danny.jpeg' },
+        ];
+
+        // Branch config: display text for templates + default doelgroep
+        const BRANCH_CONFIG = {
+            'food':              { text: 'de voedingsmiddelenindustrie',   doelgroep: 'horeca, retail en groothandel afnemers' },
+            'food-horeca':       { text: 'de horecaleverancierssector',    doelgroep: 'horecaklanten, cafés en cateringbedrijven' },
+            'food-retail':       { text: 'de retail food sector',          doelgroep: 'supermarkten, speciaalzaken en online retail' },
+            'productie':         { text: 'de productie-industrie',         doelgroep: 'OEM-klanten, distributeurs en eindklanten' },
+            'productie-metaal':  { text: 'de metaalindustrie',             doelgroep: 'machinebouwers, constructiebedrijven en toeleveranciers' },
+            'productie-chemie':  { text: 'de chemische industrie',         doelgroep: 'procesindustrie, industriële afnemers en exportklanten' },
+            'bouw':              { text: 'de bouwsector',                  doelgroep: 'aannemers, architecten en projectontwikkelaars' },
+            'bouw-installatie':  { text: 'de installatietechniek',         doelgroep: 'utiliteit, industrie en woningbouw klanten' },
+            'techniek':          { text: 'de technische sector',           doelgroep: 'resellers, systeemintegratoren en eindgebruikers' },
+            'techniek-it':       { text: 'de IT & telecomsector',          doelgroep: 'SaaS klanten, managed services en resellers' },
+            'handel':            { text: 'de handelsector',                doelgroep: 'retailers, online kanalen en B2B accounts' },
+            'handel-import':     { text: 'de import/exportsector',         doelgroep: 'internationale klanten, binnenlandse afnemers en logistieke partners' },
+            'agri':              { text: 'de agrarische sector',           doelgroep: 'kwekerijen, dealers en hoveniers' },
+            'dienstverlening':   { text: 'de dienstverleningssector',      doelgroep: 'MKB, enterprise en publieke sector organisaties' },
+            'logistiek':         { text: 'de transport & logistiek sector', doelgroep: 'verladers, logistiek dienstverleners en internationale klanten' },
+        };
+
+        function onBrancheChange() {
+            const val = document.getElementById('branche').value;
+            const cfg = BRANCH_CONFIG[val];
+            if (cfg) {
+                document.getElementById('doelgroep').value = cfg.doelgroep;
+            }
+            debouncedUpdate();
+        }
+
+        function getSelectedPresenter() {
+            const idx = parseInt(document.getElementById('presenter-select').value, 10);
+            return TEAM_MEMBERS[idx] || TEAM_MEMBERS[0];
+        }
+
+        function onPresenterChange() {
+            const p = getSelectedPresenter();
+            const preview = document.getElementById('presenter-preview');
+            preview.innerHTML = `
+                <img src="${escapeAttr(p.photo)}" alt="" onerror="this.style.display='none'">
+                <div class="info">
+                    <div class="name">${p.name}</div>
+                    <div class="role">${p.role}</div>
+                </div>
+            `;
+            debouncedUpdate();
+        }
+
+        // Debounced update
+        function debouncedUpdate() {
+            clearTimeout(updateTimer);
+            updateTimer = setTimeout(updatePreview, 200);
+        }
+
+        // Load both templates via fetch
+        async function loadTemplates() {
+            try {
+                const [metCrm, zonderCrm] = await Promise.all([
+                    fetch('samenvatting-met-crm.html').then(r => {
+                        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                        return r.text();
+                    }),
+                    fetch('samenvatting-zonder-crm.html').then(r => {
+                        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                        return r.text();
+                    })
+                ]);
+
+                templates['met-crm'] = metCrm;
+                templates['zonder-crm'] = zonderCrm;
+
+                document.getElementById('loading').classList.add('loaded');
+                updatePreview();
+            } catch (e) {
+                console.error('Failed to load templates:', e);
+                const loading = document.getElementById('loading');
+                loading.innerHTML = `
+                    <div class="error-box">
+                        <h2>Templates niet gevonden</h2>
+                        <p>De samenvatting HTML-bestanden konden niet geladen worden.
+                        Zorg dat je deze pagina via een lokale HTTP server opent:</p>
+                        <code>cd "Acq Presentaties v3/samenvatting"<br>python3 -m http.server 3005</code>
+                        <p style="margin-top: 16px;">Of gebruik het npm script:</p>
+                        <code>npm run samenvatting</code>
+                    </div>`;
+            }
+        }
+
+        // ===== JSON IMPORT =====
+        function importConfig(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    applyConfig(data);
+
+                    const status = document.getElementById('import-status');
+                    status.textContent = `Config geladen: ${data.clientName || file.name}`;
+                    status.classList.add('visible');
+                    setTimeout(() => status.classList.remove('visible'), 4000);
+                } catch (err) {
+                    alert('Ongeldig JSON bestand: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function applyConfig(data) {
+            // Auto-select version based on hasCRM or version field
+            if (data.version) {
+                setVersion(data.version);
+            } else if (typeof data.hasCRM === 'boolean') {
+                setVersion(data.hasCRM ? 'met-crm' : 'zonder-crm');
+            }
+
+            // Restore package & sales count
+            if (data.salesCount) {
+                document.getElementById('sales-count').value = data.salesCount;
+            }
+            if (data.package) {
+                currentPackage = data.package;
+                document.getElementById('pkg-full-btn').classList.toggle('active', data.package === 'full');
+                document.getElementById('pkg-lite-btn').classList.toggle('active', data.package === 'lite');
+            }
+            updatePricePreview();
+
+            // Fill text fields
+            if (data.clientName) {
+                document.getElementById('bedrijfsnaam').value = data.clientName;
+            }
+            if (data.crmSystem) {
+                const crm = data.crmSystem.replace(/\[|\]/g, '');
+                if (crm && crm !== 'CRM-systeem') {
+                    document.getElementById('crm-naam').value = crm;
+                }
+            }
+            if (data.branch) {
+                const brancheSelect = document.getElementById('branche');
+                if (BRANCH_CONFIG[data.branch]) {
+                    brancheSelect.value = data.branch;
+                    document.getElementById('doelgroep').value = BRANCH_CONFIG[data.branch].doelgroep;
+                }
+            }
+            if (data.doelgroep) {
+                document.getElementById('doelgroep').value = data.doelgroep;
+            }
+            // Fallback: use clientTypeLabel from acquisitie export as doelgroep
+            if (!document.getElementById('doelgroep').value && data.clientTypeLabel) {
+                document.getElementById('doelgroep').value = data.clientTypeLabel;
+            }
+
+            // AI fields
+            if (data.aiBevindingen) {
+                document.getElementById('ai-bevindingen').value = data.aiBevindingen;
+            }
+            if (data.aiResult) {
+                document.getElementById('ai-result').value = data.aiResult;
+                document.getElementById('ai-result').classList.remove('hidden');
+                document.getElementById('ai-result-label').classList.remove('hidden');
+            }
+
+            // Presenter: match by name or use imported data
+            if (data.presenter && data.presenter.name) {
+                const idx = TEAM_MEMBERS.findIndex(m => m.name === data.presenter.name);
+                if (idx >= 0) {
+                    document.getElementById('presenter-select').value = String(idx);
+                    onPresenterChange();
+                }
+            }
+
+            // Logo: base64 or URL
+            if (data.clientLogo) {
+                if (data.clientLogo.startsWith('data:')) {
+                    logoBase64 = data.clientLogo;
+                    document.getElementById('logo-url').value = '';
+                } else {
+                    logoBase64 = '';
+                    document.getElementById('logo-url').value = data.clientLogo;
+                }
+            }
+
+            // Background image
+            if (data.clientBackgroundImage) {
+                if (data.clientBackgroundImage.startsWith('data:')) {
+                    bgBase64 = data.clientBackgroundImage;
+                    document.getElementById('bg-url').value = '';
+                } else {
+                    bgBase64 = '';
+                    document.getElementById('bg-url').value = data.clientBackgroundImage;
+                }
+            }
+
+            // Derive doelgroep from segments if available (from acquisitie presentatie export)
+            if (data.segments && Array.isArray(data.segments)) {
+                const labels = data.segments
+                    .map(s => s.label || s.sublabel)
+                    .filter(Boolean)
+                    .map(l => l.toLowerCase());
+                if (labels.length > 0 && !labels.every(l => l.startsWith('Klantsegment'))) {
+                    document.getElementById('doelgroep').value = labels.join(', ');
+                }
+            }
+
+            updatePreview();
+            updateLogoPreview();
+            updateBgPreview();
+        }
+
+        // ===== JSON EXPORT =====
+        function exportConfig() {
+            const presenterIdx = parseInt(document.getElementById('presenter-select').value, 10);
+            const presenter = TEAM_MEMBERS[presenterIdx] || TEAM_MEMBERS[0];
+
+            const data = {
+                version: currentVersion,
+                hasCRM: currentVersion === 'met-crm',
+                package: currentPackage,
+                salesCount: getSalesCount(),
+                clientName: document.getElementById('bedrijfsnaam').value,
+                crmSystem: document.getElementById('crm-naam').value,
+                branch: document.getElementById('branche').value,
+                doelgroep: document.getElementById('doelgroep').value,
+                aiBevindingen: document.getElementById('ai-bevindingen').value,
+                aiResult: document.getElementById('ai-result').value,
+                presenter: { name: presenter.name, role: presenter.role, email: presenter.email, phone: presenter.phone, photo: presenter.photo },
+                clientLogo: getLogoSrc(),
+                clientBackgroundImage: getBgSrc(),
+            };
+
+            const slug = data.clientName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() || 'config';
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `zk-samenvatting-${slug}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ===== LOGO UPLOAD =====
+        function handleLogoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            resizeToBase64(file, 400, 'png').then(dataUrl => {
+                logoBase64 = dataUrl;
+                document.getElementById('logo-url').value = '';
+                updatePreview();
+                updateLogoPreview();
+            });
+            input.value = '';
+        }
+
+        // ===== BACKGROUND UPLOAD =====
+        function handleBgUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            resizeToBase64(file, 1200, 'jpeg').then(dataUrl => {
+                bgBase64 = dataUrl;
+                document.getElementById('bg-url').value = '';
+                updatePreview();
+                updateBgPreview();
+            });
+            input.value = '';
+        }
+
+        // Resize image to base64 data URL
+        function resizeToBase64(file, maxWidth, format) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const scale = Math.min(1, maxWidth / img.width);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const mime = format === 'png' ? 'image/png' : 'image/jpeg';
+                        const quality = format === 'jpeg' ? 0.8 : undefined;
+                        resolve(canvas.toDataURL(mime, quality));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function getLogoSrc() {
+            if (logoBase64) return logoBase64;
+            return document.getElementById('logo-url').value || '';
+        }
+
+        function getBgSrc() {
+            if (bgBase64) return bgBase64;
+            return document.getElementById('bg-url').value || '';
+        }
+
+        function removeLogo() {
+            logoBase64 = '';
+            document.getElementById('logo-url').value = '';
+            updateLogoPreview();
+            debouncedUpdate();
+        }
+
+        function removeBg() {
+            bgBase64 = '';
+            document.getElementById('bg-url').value = '';
+            updateBgPreview();
+            debouncedUpdate();
+        }
+
+        function updateLogoPreview() {
+            const src = getLogoSrc();
+            const preview = document.getElementById('logo-preview');
+            const removeBtn = document.getElementById('logo-remove');
+            if (src) {
+                preview.innerHTML = `<img src="${escapeAttr(src)}" alt="Logo" onerror="this.parentElement.innerHTML='<span>Kon niet laden</span>'">`;
+                removeBtn.style.display = '';
+            } else {
+                preview.innerHTML = '<span>Logo preview</span>';
+                removeBtn.style.display = 'none';
+            }
+        }
+
+        function updateBgPreview() {
+            const src = getBgSrc();
+            const preview = document.getElementById('bg-preview');
+            const removeBtn = document.getElementById('bg-remove');
+            if (src) {
+                preview.innerHTML = `<img src="${escapeAttr(src)}" alt="Achtergrond" onerror="this.parentElement.innerHTML='<span>Kon niet laden</span>'">`;
+                removeBtn.style.display = '';
+            } else {
+                preview.innerHTML = '<span>Achtergrond preview</span>';
+                removeBtn.style.display = 'none';
+            }
+        }
+
+        // ===== TEMPLATE PROCESSING =====
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function escapeAttr(str) {
+            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getBaseUrl() {
+            const href = window.location.href;
+            return href.substring(0, href.lastIndexOf('/') + 1);
+        }
+
+        function getProcessedHTML() {
+            const template = templates[currentVersion];
+            if (!template) return '';
+
+            let html = template;
+
+            // Get selected presenter
+            const presenter = getSelectedPresenter();
+
+            // Resolve branche dropdown to display text
+            const brancheCode = document.getElementById('branche').value;
+            const brancheText = BRANCH_CONFIG[brancheCode]?.text || brancheCode;
+
+            // AI result fills the full custom paragraph
+            const bedrijf = document.getElementById('bedrijfsnaam').value || '[bedrijf]';
+            const crm = document.getElementById('crm-naam').value || 'het CRM';
+            const aiResultRaw = document.getElementById('ai-result').value;
+            const isMetCrm = currentVersion === 'met-crm';
+            const aiResult = aiResultRaw || (isMetCrm
+                ? `In ons gesprek hebben we de huidige werkwijze en het gebruik van ${crm} bij ${bedrijf} doorgenomen. Er is een stevige basis en er liggen concrete kansen om het salesproces verder te versterken met slimme automatisering en betere datakoppelingen.`
+                : `In ons gesprek hebben we de huidige werkwijze bij ${bedrijf} doorgenomen. Er is een gedreven team en er liggen mooie kansen om met een centraal CRM-systeem meer grip te krijgen op klanten, pipeline en opvolging.`);
+
+            // Presenter first name as contactpersoon fallback
+            const presenterFirstName = presenter.name.split(' ')[0];
+
+            // Placeholder values from form
+            const placeholders = {
+                '[BEDRIJFSNAAM]': document.getElementById('bedrijfsnaam').value,
+                '[CRM_NAAM]': document.getElementById('crm-naam').value,
+                '[BRANCHE]': brancheText,
+                '[DOELGROEP]': document.getElementById('doelgroep').value,
+                '[AI_TEKST]': aiResult,
+                '[CONTACTPERSOON]': presenterFirstName,
+                '[PRESENTER_NAME]': presenter.name,
+                '[PRESENTER_ROLE]': presenter.role,
+                '[PRESENTER_EMAIL]': presenter.email,
+                '[PRESENTER_PHONE]': presenter.phone || presenter.email,
+                '[PRESENTER_PHOTO]': presenter.photo,
+            };
+
+            // Replace each placeholder (both inside .ph spans and standalone)
+            for (const [placeholder, value] of Object.entries(placeholders)) {
+                if (!value) continue;
+
+                // Replace <span class="ph">[X]</span> with plain value
+                const spanRegex = new RegExp(
+                    `<span class="ph">${escapeRegex(placeholder)}<\\/span>`,
+                    'g'
+                );
+                html = html.replace(spanRegex, `<strong>${value}</strong>`);
+
+                // Replace standalone [X]
+                const plainRegex = new RegExp(escapeRegex(placeholder), 'g');
+                html = html.replace(plainRegex, value);
+            }
+
+            // Strip any remaining .ph spans (keep inner content, remove yellow highlight)
+            // Handles spans with extra attributes: <span class="ph" style="...">
+            html = html.replace(/<span class="ph"[^>]*>([\s\S]*?)<\/span>/g, '$1');
+
+            // Handle logo: replace placeholder div with actual image
+            const logoSrc = getLogoSrc();
+            if (logoSrc) {
+                html = html.replace(
+                    /<div class="client-logo-placeholder">[^]*?<\/div>/g,
+                    `<img src="${escapeAttr(logoSrc)}" alt="Logo" style="max-height: 56px; max-width: 160px; object-fit: contain;">`
+                );
+            }
+
+            // Handle background image for cover page
+            const bgSrc = getBgSrc();
+            if (bgSrc) {
+                html = html.replace(
+                    /id="cover-page"/,
+                    `id="cover-page" style="background-image: url('${bgSrc.replace(/'/g, "\\'")}'); background-size: cover; background-position: center;"`
+                );
+                html = html.replace(
+                    '</style>',
+                    `#cover-page { position: relative; }
+                    #cover-page::before {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        background: rgba(255,255,255,0.88);
+                        z-index: 0;
+                    }
+                    #cover-page > * { position: relative; z-index: 1; }
+                    </style>`
+                );
+            }
+
+            // Package: show/hide Full vs Lite sections
+            const pkg = currentPackage;
+            const salesCount = getSalesCount();
+            const price = calculatePrice(pkg, salesCount);
+
+            // Show correct package variant, hide the other
+            if (pkg === 'full') {
+                html = html.replace(/data-package="lite"[^>]*>/g, match => match.replace('>', ' style="display:none !important">'));
+            } else {
+                html = html.replace(/data-package="full"[^>]*>/g, match => match.replace('>', ' style="display:none !important">'));
+            }
+
+            // Inject price
+            html = html.replace(/\[PRIJS\]/g, formatPrice(price));
+            html = html.replace(/\[PRIJS_PER_MAAND\]/g, formatPrice(price) + ' /mnd');
+            html = html.replace(/\[PAKKET_LABEL\]/g, pkg === 'full' ? 'Full pakket' : 'Lite pakket');
+            html = html.replace(/\[SALES_COUNT\]/g, String(salesCount));
+
+            // Show team size note only for Full with >5 sales
+            if (pkg === 'full' && salesCount > 5) {
+                html = html.replace(/class="pricing-team-size"/g, 'class="pricing-team-size" style="display:block"');
+            }
+
+            // Add <base> tag for resolving relative image paths
+            const baseUrl = getBaseUrl();
+            html = html.replace(
+                '<meta charset="UTF-8">',
+                `<meta charset="UTF-8">\n    <base href="${baseUrl}">`
+            );
+
+            return html;
+        }
+
+        // ===== PREVIEW =====
+        function updatePreview() {
+            const html = getProcessedHTML();
+            if (!html) return;
+
+            document.getElementById('preview').srcdoc = html;
+            updateLogoPreview();
+            updateBgPreview();
+            updatePricePreview();
+        }
+
+        // ===== VERSION TOGGLE =====
+        function setVersion(version) {
+            currentVersion = version;
+
+            document.querySelectorAll('.version-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.version === version);
+            });
+
+            const isMetCrm = version === 'met-crm';
+            document.getElementById('grp-crm-naam').classList.toggle('hidden', !isMetCrm);
+
+            updatePreview();
+        }
+
+        // ===== PDF DOWNLOAD =====
+        function downloadPDF() {
+            const html = getProcessedHTML();
+            if (!html) return;
+
+            const w = window.open('', '_blank');
+            if (!w) {
+                alert('Pop-up geblokkeerd. Sta pop-ups toe voor deze pagina.');
+                return;
+            }
+
+            w.document.write(html);
+            w.document.close();
+
+            const waitForImages = () => {
+                const images = w.document.querySelectorAll('img');
+                const promises = Array.from(images).map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise((resolve) => {
+                        img.onload = resolve;
+                        img.onerror = resolve;
+                    });
+                });
+                return Promise.all(promises);
+            };
+
+            const waitForFonts = () => {
+                if (w.document.fonts && w.document.fonts.ready) {
+                    return w.document.fonts.ready;
+                }
+                return Promise.resolve();
+            };
+
+            Promise.all([waitForImages(), waitForFonts()])
+                .then(() => new Promise(r => setTimeout(r, 500)))
+                .then(() => {
+                    // Auto-scale pages that overflow A4
+                    autoScalePages(w);
+                    w.focus();
+                    w.print();
+                });
+        }
+
+        // Scale overflowing pages to fit A4 using CSS zoom
+        function autoScalePages(w) {
+            const pages = w.document.querySelectorAll('.page');
+            const A4_PX = 297 * 96 / 25.4; // 297mm ≈ 1122.52px at 96 DPI
+
+            // Step 1: Remove print height constraints to measure natural heights
+            pages.forEach(page => {
+                page.style.setProperty('height', 'auto', 'important');
+                page.style.setProperty('min-height', '0', 'important');
+                page.style.setProperty('overflow', 'visible', 'important');
+            });
+
+            // Force layout reflow
+            w.document.body.offsetHeight;
+
+            // Step 2: Measure and apply zoom where needed
+            pages.forEach(page => {
+                const naturalH = page.scrollHeight;
+
+                if (naturalH > A4_PX + 2) {
+                    // Calculate zoom factor to fit content in A4
+                    const zoom = A4_PX / naturalH;
+                    page.style.setProperty('zoom', zoom.toFixed(6), 'important');
+                    // In zoomed coordinates, height = naturalH. Visual = naturalH * zoom ≈ A4_PX
+                    page.style.setProperty('height', naturalH + 'px', 'important');
+                    page.style.setProperty('overflow', 'hidden', 'important');
+                } else {
+                    // Page fits — set exact A4 height
+                    page.style.setProperty('height', A4_PX + 'px', 'important');
+                    page.style.setProperty('overflow', 'hidden', 'important');
+                }
+            });
+        }
+
+        // ===== AI GENERATION =====
+        // Seed API key if not yet stored
+        if (!localStorage.getItem('zk_openai_key')) {
+            localStorage.setItem('zk_openai_key', 'REMOVED');
+        }
+
+        function getAiKey() {
+            return localStorage.getItem('zk_openai_key') || '';
+        }
+
+        function saveAiKey() {
+            const key = document.getElementById('ai-key-input').value.trim();
+            if (key) {
+                localStorage.setItem('zk_openai_key', key);
+                document.getElementById('ai-key-row').style.display = 'none';
+                generateWithAI();
+            }
+        }
+
+        function onAiResultChange() {
+            debouncedUpdate();
+        }
+
+        async function generateWithAI() {
+            const apiKey = getAiKey();
+            if (!apiKey) {
+                document.getElementById('ai-key-row').style.display = '';
+                document.getElementById('ai-key-input').focus();
+                return;
+            }
+
+            const bevindingen = document.getElementById('ai-bevindingen').value.trim();
+            if (!bevindingen) {
+                document.getElementById('ai-bevindingen').focus();
+                return;
+            }
+
+            const btn = document.getElementById('ai-generate-btn');
+            btn.disabled = true;
+            btn.textContent = 'Genereren...';
+            btn.classList.add('loading');
+
+            const bedrijf = document.getElementById('bedrijfsnaam').value || '[bedrijf]';
+            const crm = document.getElementById('crm-naam').value || 'het CRM';
+            const isMetCrm = currentVersion === 'met-crm';
+
+            let prompt;
+            if (isMetCrm) {
+                prompt = `Je schrijft een alinea voor een professionele B2B sales samenvatting van Zwarte Kraai (CRM & Sales consultancy).
+
+Context: ${bedrijf} heeft een CRM-systeem (${crm}). De consultant heeft een gesprek gevoerd en de volgende zaken doorgenomen:
+
+${bevindingen}
+
+Schrijf een alinea van 3-4 zinnen. De toon is positief en respectvol — ondernemers zijn trots op hun bedrijf. Beschrijf wat er besproken is (teamgrootte, huidige werkwijze, tools, etc.) en benoem waar concrete kansen liggen. Begin met "In ons gesprek hebben we de huidige werkwijze en het gebruik van ${crm} bij ${bedrijf} doorgenomen." Professioneel maar toegankelijk. Geen aanhalingstekens rondom de tekst.`;
+            } else {
+                prompt = `Je schrijft een alinea voor een professionele B2B sales samenvatting van Zwarte Kraai (CRM & Sales consultancy).
+
+Context: ${bedrijf} werkt momenteel zonder centraal CRM-systeem. De consultant heeft een gesprek gevoerd en de volgende zaken doorgenomen:
+
+${bevindingen}
+
+Schrijf een alinea van 3-4 zinnen. De toon is positief en respectvol — ondernemers zijn trots op hun bedrijf. Beschrijf wat er besproken is (teamgrootte, huidige werkwijze, tools, etc.) en benoem waar concrete kansen liggen. Begin met "In ons gesprek hebben we de huidige werkwijze bij ${bedrijf} doorgenomen." Professioneel maar toegankelijk. Geen aanhalingstekens rondom de tekst.`;
+            }
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: 400,
+                        temperature: 0.7,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    if (response.status === 401) {
+                        localStorage.removeItem('zk_openai_key');
+                        document.getElementById('ai-key-row').style.display = '';
+                        document.getElementById('ai-key-input').value = '';
+                        document.getElementById('ai-key-input').focus();
+                        throw new Error('Ongeldige API key. Voer een nieuwe key in.');
+                    }
+                    throw new Error(err.error?.message || `API error ${response.status}`);
+                }
+
+                const data = await response.json();
+                const result = data.choices?.[0]?.message?.content?.trim()
+                    ?.replace(/^["']|["']$/g, '') // strip wrapping quotes
+                    || '';
+
+                const resultEl = document.getElementById('ai-result');
+                resultEl.value = result;
+                resultEl.classList.remove('hidden');
+                document.getElementById('ai-result-label').classList.remove('hidden');
+                debouncedUpdate();
+
+            } catch (error) {
+                alert('AI fout: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Verwerk met AI';
+                btn.classList.remove('loading');
+            }
+        }
+
+        // Initialize
+        loadTemplates();
+    </script>
+</body>
+</html>

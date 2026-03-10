@@ -1,0 +1,25 @@
+{
+  "name": "zk-acq-presentatie-v3",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && cp -r salesdeck dist/salesdeck && cp -r samenvatting dist/samenvatting && cp public/zk-logo-full.png dist/zk-logo-full.png && mkdir -p dist/acquisitie && cp dist/index.html dist/acquisitie/index.html && mkdir -p dist/share && cp dist/index.html dist/share/index.html",
+    "preview": "vite preview",
+    "samenvatting": "python3 -m http.server 3005 -d samenvatting"
+  },
+  "dependencies": {
+    "framer-motion": "^12.23.26",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "puppeteer": "^24.37.5",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+*.local
+
+# Large files
+*.mp4
+
+# Root-level asset duplicates (originals in public/)
+/ZWARTEKRAAI_WOVAR_FINAL_SUBS.mp4
+/foto-danny.jpeg
+/fvdvooren-logo.svg
+/zk-logo-full.png
+/logos/

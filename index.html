@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zwarte Kraai - Presentatie</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+      .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8f5ff;
+        color: #2a0042;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(91, 214, 117, 0.2); }
+        50% { box-shadow: 0 0 40px rgba(91, 214, 117, 0.4); }
+      }
+      .animate-float { animation: float 3s ease-in-out infinite; }
+      .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+      @keyframes won-glow {
+        0%, 100% { box-shadow: 0 0 15px rgba(0, 191, 111, 0.2); }
+        50% { box-shadow: 0 0 35px rgba(0, 191, 111, 0.45); }
+      }
+      .animate-won-glow { animation: won-glow 1.5s ease-in-out infinite; }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                purple: '#2a0042',
+                'purple-light': '#3d0059',
+                green: '#5bd675',
+                pink: '#ff8afc',
+                accent: '#9981fc',
+                yellow: '#f5c542',
+              },
+              hs: {
+                blue: '#0091ae',
+                'blue-dark': '#007a8c',
+                'blue-light': '#e5f5f8',
+                orange: '#ff7a59',
+                'orange-light': '#fff1ee',
+                dark: '#33475b',
+                medium: '#516f90',
+                light: '#7c98b6',
+                border: '#cbd6e2',
+                bg: '#f5f8fa',
+                white: '#ffffff',
+                green: '#00bf6f',
+                'green-light': '#e5faf0',
+                red: '#f2545b',
+                'red-light': '#fce8e9',
+                yellow: '#dbab09',
+                'yellow-light': '#fef8e0',
+              }
+            },
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

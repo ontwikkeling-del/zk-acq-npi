@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zwarte Kraai - Presentatie</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* ===== FONTS ===== */
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-ExtraLight.otf') format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-SemiBold.otf') format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-ExtraBold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Nohemi'; src: url('fonts/Nohemi-Black.otf') format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+
+    /* ===== BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body {
+      font-family: 'Nohemi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-feature-settings: "kern" 1, "liga" 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: 0.015em;
+      margin: 0; padding: 16px 0;
+      background-color: #e5e5e5; color: #141414;
+    }
+    h1, h2, h3, .heading { font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif; letter-spacing: -0.01em; }
+    img { display: block; }
+
+    /* ===== PAGE ===== */
+    .page {
+      width: 297mm; height: 210mm; overflow: hidden; position: relative;
+      display: flex !important; align-items: center !important;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    }
+    .page:last-child { margin-bottom: 0; }
+    .page.page-cover { flex-direction: column !important; justify-content: center !important; text-align: center; }
+    .page.page-cta { justify-content: center !important; }
+    @media print {
+      @page { size: landscape; margin: 0; }
+      body { background: #fff !important; margin: 0; padding: 0; }
+      .page { page-break-after: always; margin: 0; box-shadow: none; }
+      .page:last-child { page-break-after: avoid; }
+      * { box-shadow: none !important; }
+      .glass, .glass-strong {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+    }
+
+    /* ===== GLASS ===== */
+    .glass {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .glass-strong {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    /* ===== LAYOUT ===== */
+    .flex { display: flex; }
+    .grid { display: grid; }
+    .inline-block { display: inline-block; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .justify-center { justify-content: center; }
+    .flex-1 { flex: 1 1 0%; }
+    .flex-shrink-0 { flex-shrink: 0; }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .col-span-2 { grid-column: span 2 / span 2; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-5 { gap: 1.25rem; }
+    .gap-6 { gap: 1.5rem; }
+    .gap-8 { gap: 2rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-3 > * + * { margin-top: 0.75rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .space-y-5 > * + * { margin-top: 1.25rem; }
+
+    /* ===== POSITION ===== */
+    .absolute { position: absolute; }
+    .relative { position: relative; }
+    .top-6 { top: 1.5rem; }
+    .top-8 { top: 2rem; }
+    .right-10 { right: 2.5rem; }
+    .right-12 { right: 3rem; }
+
+    /* ===== SIZING ===== */
+    .w-3\.5 { width: 0.875rem; }
+    .w-4 { width: 1rem; }
+    .w-5 { width: 1.25rem; }
+    .w-7 { width: 1.75rem; }
+    .w-8 { width: 2rem; }
+    .w-9 { width: 2.25rem; }
+    .w-11 { width: 2.75rem; }
+    .w-14 { width: 3.5rem; }
+    .w-20 { width: 5rem; }
+    .w-auto { width: auto; }
+    .w-full { width: 100%; }
+    .h-3\.5 { height: 0.875rem; }
+    .h-4 { height: 1rem; }
+    .h-5 { height: 1.25rem; }
+    .h-7 { height: 1.75rem; }
+    .h-8 { height: 2rem; }
+    .h-9 { height: 2.25rem; }
+    .h-10 { height: 2.5rem; }
+    .h-11 { height: 2.75rem; }
+    .h-14 { height: 3.5rem; }
+    .h-20 { height: 5rem; }
+    .h-28 { height: 7rem; }
+    .h-32 { height: 8rem; }
+    .h-\[3px\] { height: 3px; }
+    .max-w-4xl { max-width: 56rem; }
+    .max-w-6xl { max-width: 72rem; }
+
+    /* ===== SPACING ===== */
+    .p-2 { padding: 0.5rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-4 { padding: 1rem; }
+    .p-5 { padding: 1.25rem; }
+    .p-6 { padding: 1.5rem; }
+    .p-7 { padding: 1.75rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .px-8 { padding-left: 2rem; padding-right: 2rem; }
+    .px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+    .px-12 { padding-left: 3rem; padding-right: 3rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+    .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+    .pt-3 { padding-top: 0.75rem; }
+    .pt-5 { padding-top: 1.25rem; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-1\.5 { margin-bottom: 0.375rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-5 { margin-bottom: 1.25rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mt-0\.5 { margin-top: 0.125rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+
+    /* ===== TYPOGRAPHY ===== */
+    .text-\[10px\] { font-size: 10px; }
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-base { font-size: 1rem; line-height: 1.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .text-5xl { font-size: 3rem; line-height: 1; }
+    .text-7xl { font-size: 4.5rem; line-height: 1; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .font-black { font-weight: 900; }
+    .italic { font-style: italic; }
+    .uppercase { text-transform: uppercase; }
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .leading-\[1\.1\] { line-height: 1.1; }
+    .leading-tight { line-height: 1.25; }
+    .tracking-wider { letter-spacing: 0.05em; }
+    .tracking-\[0\.2em\] { letter-spacing: 0.2em; }
+
+    /* ===== BORDERS ===== */
+    .border { border-width: 1px; border-style: solid; }
+    .border-2 { border-width: 2px; border-style: solid; }
+    .border-3 { border-width: 3px; border-style: solid; }
+    .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+    .border-t { border-top-width: 1px; border-top-style: solid; }
+    .border-l-4 { border-left-width: 4px; border-left-style: solid; }
+    .rounded-full { border-radius: 9999px; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .border-border { border-color: #eaeaea; }
+    .border-violet { border-color: #9482fb; }
+    .border-violet\/50 { border-color: rgba(148, 130, 251, 0.5); }
+    .border-violet\/15 { border-color: rgba(148, 130, 251, 0.15); }
+    .border-cyan { border-color: #00e1ff; }
+    .border-lilac { border-color: #bd7fff; }
+    .border-mint { border-color: #5ad775; }
+    .border-rose\/25 { border-color: rgba(255, 137, 245, 0.25); }
+    .border-white\/10 { border-color: rgba(255, 255, 255, 0.1); }
+
+    /* ===== BACKGROUND COLORS ===== */
+    .bg-surface { background-color: #ffffff; }
+    .bg-card { background-color: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .bg-violet { background-color: #9482fb; }
+    .bg-mint { background-color: #5ad775; }
+    .bg-violet\/5 { background-color: rgba(148, 130, 251, 0.05); }
+    .bg-violet\/10 { background-color: rgba(148, 130, 251, 0.1); }
+    .bg-cyan\/10 { background-color: rgba(0, 225, 255, 0.1); }
+    .bg-rose\/10 { background-color: rgba(255, 137, 245, 0.1); }
+    .bg-rose\/15 { background-color: rgba(255, 137, 245, 0.15); }
+    .bg-mint\/10 { background-color: rgba(90, 215, 117, 0.1); }
+    .bg-lilac\/10 { background-color: rgba(189, 127, 255, 0.1); }
+
+    /* ===== GRADIENTS ===== */
+    .bg-gradient-to-br.from-deep.via-deep-mid.to-deep {
+      background:
+        radial-gradient(ellipse at 25% 40%, rgba(148, 130, 251, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 60%, rgba(0, 225, 255, 0.05) 0%, transparent 50%),
+        linear-gradient(to bottom right, #1a0030, #2d004d, #1a0030);
+    }
+    .bg-gradient-to-r.from-violet.to-lilac { background-image: linear-gradient(to right, #9482fb, #bd7fff); box-shadow: 0 2px 8px rgba(148, 130, 251, 0.3); }
+    .bg-gradient-to-r.from-violet.to-cyan { background-image: linear-gradient(to right, #9482fb, #00e1ff); }
+
+    /* ===== TEXT COLORS ===== */
+    .text-fg { color: #141414; }
+    .text-white { color: #ffffff; }
+    .text-violet { color: #9482fb; }
+    .text-cyan { color: #00e1ff; }
+    .text-lilac { color: #bd7fff; }
+    .text-mint { color: #5ad775; }
+    .text-rose { color: #ff89f5; }
+    .text-fg\/40 { color: rgba(20, 20, 20, 0.4); }
+    .text-fg\/50 { color: rgba(20, 20, 20, 0.5); }
+    .text-fg\/60 { color: rgba(20, 20, 20, 0.6); }
+    .text-white\/30 { color: rgba(255, 255, 255, 0.3); }
+    .text-white\/40 { color: rgba(255, 255, 255, 0.4); }
+    .text-white\/50 { color: rgba(255, 255, 255, 0.5); }
+    .text-white\/60 { color: rgba(255, 255, 255, 0.6); }
+
+    /* ===== MISC ===== */
+    .overflow-hidden { overflow: hidden; }
+    .object-cover { object-fit: cover; }
+    .object-contain { object-fit: contain; }
+
+    /* ===== REFINED COMPONENTS ===== */
+    /* Gradient pill banner - subtle glow */
+    .bg-gradient-to-r.from-violet.to-lilac.rounded-full {
+      box-shadow: 0 2px 12px rgba(148, 130, 251, 0.25);
+    }
+
+    /* Dark panel on light slide */
+    .bg-gradient-to-br.from-deep.via-deep-mid.to-deep.rounded-2xl {
+      box-shadow: 0 4px 16px rgba(42, 0, 66, 0.15);
+    }
+
+    /* Green CTA block */
+    .bg-mint.rounded-2xl {
+      box-shadow: 0 2px 12px rgba(90, 215, 117, 0.25);
+    }
+
+    /* Violet button on CTA */
+    .bg-violet.rounded-xl {
+      box-shadow: 0 2px 8px rgba(148, 130, 251, 0.35);
+    }
+
+    /* Photo borders - refined */
+    img.rounded-full { border: none; }
+
+    /* Surface bg for logo cells */
+    .bg-surface.rounded-xl {
+      background-color: #f7f7f8;
+      border: 1px solid #eaeaea;
+    }
+
+    /* Comparison table refinement */
+    .bg-gradient-to-br.from-deep.via-deep-mid.to-deep.rounded-2xl.overflow-hidden {
+      box-shadow: 0 4px 20px rgba(42, 0, 66, 0.2);
+    }
+
+    /* Signal cards */
+    .bg-rose\/10.rounded-xl { box-shadow: 0 1px 3px rgba(255, 137, 245, 0.1); }
+    .bg-mint\/10.rounded-xl { box-shadow: 0 1px 3px rgba(90, 215, 117, 0.1); }
+  </style>
+</head>
+<body class="text-fg">
+
+  <!-- Slide 1: Cover -->
+  <div class="page page-cover px-12 py-10 bg-gradient-to-br from-deep via-deep-mid to-deep text-white">
+    <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-32 mb-6" style="filter: invert(1)" />
+    <div class="prospect-logo-container" style="display:none; margin-bottom:12px;">
+      <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:12px 28px; display:inline-block;">
+        <img class="prospect-logo" src="" alt="" style="height:44px; max-width:150px; object-fit:contain; display:block;" />
+      </div>
+    </div>
+    <div class="sector-pill inline-block glass text-white font-semibold text-sm uppercase tracking-[0.2em] px-8 py-3 rounded-full mb-8">
+      Voor ondernemers en eigenaren
+    </div>
+    <h1 class="text-7xl font-bold mb-6 leading-[1.1] text-center">
+      Haal meer uit je team,<br/>haal meer uit je klanten
+    </h1>
+    <p class="prospect-subtitle text-2xl font-semibold text-violet mb-4 text-center" style="display:none;"></p>
+    <p class="text-xl text-white/50 mb-6 text-center">Weten dat het loopt, zonder te hoeven checken</p>
+    <div class="w-20 h-[3px] bg-gradient-to-r from-violet to-cyan mx-auto mb-6 rounded-full"></div>
+    <p class="text-lg text-white/40 text-center">
+      Voorspelbare omzet door salesbegeleiding,<br/>automatisering en CRM
+    </p>
+  </div>
+
+  <!-- Slide 2: Wat zijn de uitdagingen? -->
+  <div class="page px-12 py-8 bg-surface">
+    <div class="absolute top-8 right-12">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-10" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-6">
+        <h2 class="text-5xl font-bold text-fg mb-2">Wat zijn de uitdagingen?</h2>
+        <p class="text-fg/50 text-lg">Het kost je meer dan je denkt</p>
+      </div>
+      <div class="grid grid-cols-3 gap-5 mb-6">
+        <div class="bg-card rounded-2xl p-7 text-center border border-border">
+          <div class="w-14 h-14 rounded-2xl bg-rose/10 flex items-center justify-center mx-auto mb-3">
+            <span class="text-3xl text-rose font-black">&euro;</span>
+          </div>
+          <h3 class="font-bold text-xl mb-2 text-fg">Gemiste omzet</h3>
+          <p class="text-fg/50 text-sm">Leads die te laat worden opgevolgd. Kansen die blijven liggen. Klanten die wegglippen naar concurrenten die wel snel schakelen.</p>
+        </div>
+        <div class="bg-card rounded-2xl p-7 text-center border border-border">
+          <div class="w-14 h-14 rounded-2xl bg-violet/10 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-7 h-7 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h3 class="font-bold text-xl mb-2 text-fg">Tijd</h3>
+          <p class="text-fg/50 text-sm">Uren aan controleren, uitzoeken en nalopen. Tijd die je niet aan ondernemen besteedt. Je runt je bedrijf, maar je bedrijf runt ook jou.</p>
+        </div>
+        <div class="bg-card rounded-2xl p-7 text-center border border-border">
+          <div class="w-14 h-14 rounded-2xl bg-cyan/10 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-7 h-7 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+          </div>
+          <h3 class="font-bold text-xl mb-2 text-fg">Energie en focus</h3>
+          <p class="text-fg/50 text-sm">Mentale belasting van onzekerheid. Geen overzicht omdat je niet weet hoe het er werkelijk voor staat. Constant in je hoofd.</p>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-deep via-deep-mid to-deep rounded-2xl px-8 py-4 text-center">
+        <p class="text-white"><span class="text-cyan font-bold">HET ECHTE PROBLEEM</span> &nbsp; Groei die afhangt van toeval is geen groei. Het is geluk. En geluk is niet schaalbaar.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Eén aanpak + 6 Specialisten -->
+  <div class="page px-10 py-6 bg-gradient-to-br from-deep via-deep-mid to-deep text-white">
+    <div class="absolute top-6 right-10">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-9" style="filter: invert(1)" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-4">
+        <h2 class="text-4xl font-bold mb-1">Eén aanpak die alles verbindt</h2>
+        <p class="text-white/40 text-sm">Drie pijlers die niet naast elkaar staan, maar samen een vliegwiel vormen</p>
+      </div>
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="glass rounded-2xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-white font-bold text-sm">1</div>
+            <svg class="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          </div>
+          <h3 class="font-bold text-base uppercase mb-1">Salesmethodiek & Training</h3>
+          <p class="text-violet italic text-xs mb-1">Structuur boven talent</p>
+          <p class="text-white/40 text-xs leading-tight">Een bewezen aanpak die iedereen kan volgen. Intensieve begeleiding op de werkvloer. Tweewekelijks in Q1, daarna maandelijks.</p>
+        </div>
+        <div class="glass rounded-2xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-white font-bold text-sm">2</div>
+            <svg class="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          </div>
+          <h3 class="font-bold text-base uppercase mb-1">Automatisering & AI</h3>
+          <p class="text-violet italic text-xs mb-1">Timing en prioriteit</p>
+          <p class="text-white/40 text-xs leading-tight">Automatische signalen, lead scoring en workflows. Je team doet het juiste op het juiste moment.</p>
+          <div class="mt-2 bg-rose/15 border border-rose/25 rounded-lg px-4 py-2">
+            <p class="text-rose text-xs font-bold">80% van AI projecten faalt zonder de juiste implementatie <span class="text-white/30">(RAND Corp.)</span></p>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-white font-bold text-sm">3</div>
+            <svg class="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          </div>
+          <h3 class="font-bold text-base uppercase mb-1">CRM dat stuurt</h3>
+          <p class="text-violet italic text-xs mb-1">Handelen, niet vullen</p>
+          <p class="text-white/40 text-xs leading-tight">Je CRM als stuurmiddel, niet als archief. Het systeem vertelt je team wat te doen. Jij ziet in een oogopslag hoe het ervoor staat.</p>
+        </div>
+      </div>
+      <div class="glass-strong rounded-2xl p-4">
+        <p class="text-center font-semibold text-xs text-white/50 uppercase tracking-wider mb-3">6 specialisten, elk met hun eigen expertise</p>
+        <div class="flex justify-center gap-5">
+          <div class="text-center">
+            <img src="photos/erwin-dijkstra.jpg" class="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover border-2 border-violet/50" />
+            <p class="font-bold text-xs">Erwin</p>
+            <p class="text-violet text-[10px] font-semibold">CEO & Strategie</p>
+          </div>
+          <div class="text-center">
+            <img src="photos/dennis-nijborg.jpg" class="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover border-2 border-violet/50" />
+            <p class="font-bold text-xs">Dennis</p>
+            <p class="text-violet text-[10px] font-semibold">CTO & Techniek</p>
+          </div>
+          <div class="text-center">
+            <img src="photos/hoger-hamo.jpg" class="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover border-2 border-violet/50" />
+            <p class="font-bold text-xs">Hoger</p>
+            <p class="text-violet text-[10px] font-semibold">Tech Lead</p>
+          </div>
+          <div class="text-center">
+            <img src="photos/migilio-tirtosentono.jpg" class="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover border-2 border-violet/50" />
+            <p class="font-bold text-xs">Migilio</p>
+            <p class="text-violet text-[10px] font-semibold">Sales Trainer</p>
+          </div>
+          <div class="text-center">
+            <img src="photos/david-pantophlet.jpg" class="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover border-2 border-violet/50" />
+            <p class="font-bold text-xs">David</p>
+            <p class="text-violet text-[10px] font-semibold">Head of AI</p>
+          </div>
+          <div class="text-center">
+            <img src="foto-danny.jpeg" class="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover border-2 border-violet/50" />
+            <p class="font-bold text-xs">Danny</p>
+            <p class="text-violet text-[10px] font-semibold">RevOps Specialist</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 bg-gradient-to-r from-violet to-lilac rounded-full px-6 py-2.5 text-center">
+        <p class="font-bold text-white text-sm">Het resultaat: een salesorganisatie die zichzelf stuurt. Voorspelbaar, schaalbaar, niet persoonsafhankelijk.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Geen consultant, maar een collega -->
+  <div class="page px-12 py-8 bg-surface">
+    <div class="absolute top-8 right-12">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-10" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-6">
+        <h2 class="text-5xl font-bold text-fg mb-2">Geen consultant, maar een collega</h2>
+        <p class="text-fg/50 text-lg">Wat ons onderscheidt van elke andere partij</p>
+      </div>
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <div class="bg-card rounded-2xl overflow-hidden border border-border">
+          <div class="bg-surface px-6 py-3 text-center border-b border-border">
+            <p class="font-bold text-fg/40 uppercase tracking-wider text-sm">Traditionele aanpak</p>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-start gap-3"><span class="text-rose font-black text-base mt-0.5">x</span><p class="text-fg/60 text-sm">Eenmalige CRM inrichting, daarna uitzoeken</p></div>
+            <div class="flex items-start gap-3"><span class="text-rose font-black text-base mt-0.5">x</span><p class="text-fg/60 text-sm">Training van een dag, geen opvolging</p></div>
+            <div class="flex items-start gap-3"><span class="text-rose font-black text-base mt-0.5">x</span><p class="text-fg/60 text-sm">Rapport met aanbevelingen, zelf implementeren</p></div>
+            <div class="flex items-start gap-3"><span class="text-rose font-black text-base mt-0.5">x</span><p class="text-fg/60 text-sm">Geen kennis van jouw team en markt</p></div>
+            <div class="flex items-start gap-3"><span class="text-rose font-black text-base mt-0.5">x</span><p class="text-fg/60 text-sm">Drie losse partijen, drie facturen</p></div>
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-deep via-deep-mid to-deep rounded-2xl overflow-hidden text-white">
+          <div class="bg-violet px-6 py-3 text-center">
+            <p class="font-bold uppercase tracking-wider text-sm text-white">Zwarte Kraai aanpak</p>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-start gap-3"><svg class="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg><p class="text-sm">12 maanden structurele begeleiding</p></div>
+            <div class="flex items-start gap-3"><svg class="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg><p class="text-sm">Tweewekelijks on site in Q1, daarna maandelijks</p></div>
+            <div class="flex items-start gap-3"><svg class="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg><p class="text-sm">Wij implementeren, trainen en optimaliseren</p></div>
+            <div class="flex items-start gap-3"><svg class="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg><p class="text-sm">We kennen je team, je klanten, je markt</p></div>
+            <div class="flex items-start gap-3"><svg class="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg><p class="text-sm">Eén partij, eén aanpak, alles verweven</p></div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-fg/50 text-sm">
+        Wij zijn geen externe partij die een rapport achterlaat. <strong class="text-violet">Wij zitten naast je team, kennen de namen, zien de dynamiek en sturen bij in het moment.</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- Slide 6: Wat je krijgt voor wat je investeert -->
+  <div class="page px-12 py-8 bg-surface">
+    <div class="absolute top-8 right-12">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-10" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-6">
+        <h2 class="text-5xl font-bold text-fg mb-2">Wat je krijgt voor wat je investeert</h2>
+        <p class="text-fg/50 text-lg">Vergelijk het zelf: drie partijen inhuren of alles bij Zwarte Kraai</p>
+      </div>
+      <div class="grid grid-cols-3 gap-5">
+        <div class="col-span-2 bg-card rounded-2xl p-6 border border-border">
+          <p class="text-violet font-bold text-sm uppercase tracking-wider mb-4">Wat je krijgt</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
+              <p class="text-sm text-fg">Intensieve salestraining en coaching op de werkvloer</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
+              <p class="text-sm text-fg">Volledig ingerichte automation workflows met AI</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg></div>
+              <p class="text-sm text-fg">CRM implementatie en optimalisatie</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
+              <p class="text-sm text-fg">Realtime dashboarding en rapportages</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-cyan/10 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg></div>
+              <p class="text-sm text-fg">Automatische signalen bij kansen en risico's</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+              <p class="text-sm text-fg">Continue analyse, bijsturing en verbetering</p>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div class="bg-card rounded-2xl p-5 text-center border border-border">
+            <p class="text-fg/40 font-bold text-sm uppercase tracking-wider mb-2">Losse inhuur</p>
+            <p class="text-5xl font-bold text-rose">3x tot 4x</p>
+            <p class="text-rose font-bold text-sm mt-1">duurder</p>
+            <p class="text-fg/40 text-xs mt-2">CRM specialist + salestrainer<br/>+ automation bureau</p>
+          </div>
+          <div class="bg-gradient-to-br from-deep via-deep-mid to-deep rounded-2xl p-5 text-center text-white">
+            <p class="text-violet font-bold text-sm uppercase tracking-wider mb-2">Zwarte Kraai</p>
+            <p class="text-4xl font-bold">Alles in een</p>
+            <p class="text-violet font-bold text-sm mt-1">totaalpakket</p>
+            <p class="text-white/40 text-xs mt-2">Eén investering. Eén partner.<br/>Alle expertise onder een dak.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Sales Data Intelligence Hub -->
+  <div class="page px-12 py-8 bg-surface">
+    <div class="absolute top-8 right-12">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-10" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-5">
+        <h2 class="text-5xl font-bold text-fg mb-2">Sales Data Intelligence Hub</h2>
+        <p class="text-fg/50 text-lg">Tijdsbesparing door automatische signalen. Eén overzicht. Alle data. Proactieve actie.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-4">
+          <div class="bg-card rounded-2xl p-5 border border-border">
+            <p class="text-rose font-bold text-sm uppercase tracking-wider mb-2">Het probleem</p>
+            <p class="text-fg/60 text-sm">Rapportages uit CRM, boekhouding en Excel. Allemaal losse puzzelstukjes. Je besluit op onderbuikgevoel in plaats van feiten.</p>
+          </div>
+          <div class="bg-gradient-to-br from-deep via-deep-mid to-deep rounded-2xl p-5 text-white">
+            <p class="text-cyan font-bold text-sm uppercase tracking-wider mb-2">De oplossing</p>
+            <p class="text-white/60 text-sm">Al je databronnen gecombineerd in een dashboard. Eén waarheid, realtime. Proactieve signalen die je team direct in actie zetten.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-card rounded-xl p-3 flex items-center gap-3 border border-border">
+              <div class="w-9 h-9 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+              </div>
+              <div><p class="font-bold text-xs text-fg">Betere beslissingen</p><p class="text-fg/40 text-[10px]">Sturen op feiten</p></div>
+            </div>
+            <div class="bg-card rounded-xl p-3 flex items-center gap-3 border border-border">
+              <div class="w-9 h-9 rounded-lg bg-cyan/10 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+              </div>
+              <div><p class="font-bold text-xs text-fg">Vroege signalen</p><p class="text-fg/40 text-[10px]">Risico's en kansen</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-card rounded-2xl p-5 border border-border">
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p class="text-fg/40 text-xs font-bold uppercase">Pipeline</p>
+              <p class="text-4xl font-bold text-violet">847K</p>
+            </div>
+            <div>
+              <p class="text-fg/40 text-xs font-bold uppercase">Conversie</p>
+              <p class="text-4xl font-bold text-mint">34%</p>
+            </div>
+          </div>
+          <div class="border-t border-border pt-3 mb-3">
+            <p class="text-fg/40 text-xs font-bold uppercase mb-2">Activiteit deze week</p>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="text-center"><p class="text-2xl font-bold text-fg">127</p><p class="text-fg/40 text-xs">Calls</p></div>
+              <div class="text-center"><p class="text-2xl font-bold text-fg">43</p><p class="text-fg/40 text-xs">Meetings</p></div>
+              <div class="text-center"><p class="text-2xl font-bold text-fg">18</p><p class="text-fg/40 text-xs">Offertes</p></div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="bg-rose/10 rounded-xl px-4 py-2 text-center">
+              <p class="text-rose text-sm font-bold">3 deals risico op verlies</p>
+            </div>
+            <div class="bg-mint/10 rounded-xl px-4 py-2 text-center">
+              <p class="text-mint text-sm font-bold">5 upsell kansen gedetecteerd</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: Wat het je oplevert + No Cure No Pay -->
+  <div class="page px-12 py-8 bg-surface">
+    <div class="absolute top-8 right-12">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-10" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-5">
+        <h2 class="text-5xl font-bold text-fg mb-2">Wat het je oplevert</h2>
+        <p class="text-fg/50 text-lg">Concrete resultaten voor jou als ondernemer</p>
+      </div>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <div class="bg-card rounded-xl p-4 border-l-4 border-mint flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-mint/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div><p class="font-extrabold text-sm text-fg">Grip zonder controle</p><p class="text-fg/50 text-xs">Je weet hoe het ervoor staat zonder dagelijks te hoeven checken</p></div>
+          </div>
+          <div class="bg-card rounded-xl p-4 border-l-4 border-violet flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-violet/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            </div>
+            <div><p class="font-extrabold text-sm text-fg">Voorspelbare groei</p><p class="text-fg/50 text-xs">Een forecast die klopt. Beslissingen nemen op feiten, niet op hoop.</p></div>
+          </div>
+          <div class="bg-card rounded-xl p-4 border-l-4 border-cyan flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-cyan/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+            <div><p class="font-extrabold text-sm text-fg">Meer uit je team halen</p><p class="text-fg/50 text-xs">Structuur in het salesproces. Iedereen weet wat te doen en wanneer.</p></div>
+          </div>
+          <div class="bg-card rounded-xl p-4 border-l-4 border-lilac flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-lilac/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-lilac" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div><p class="font-extrabold text-sm text-fg">Minder risico</p><p class="text-fg/50 text-xs">Niet meer afhankelijk van die ene topverkoper. Kennis zit in het systeem.</p></div>
+          </div>
+        </div>
+        <div>
+          <div class="bg-gradient-to-br from-deep via-deep-mid to-deep rounded-2xl p-6 text-white text-center mb-4">
+            <p class="text-violet font-bold text-sm uppercase tracking-wider mb-3">Het belangrijkste</p>
+            <p class="text-3xl font-bold mb-3">Haal meer uit je team,<br/>haal meer uit je klanten.</p>
+            <p class="text-white/40 text-sm">Dat kansen niet wegglippen.<br/>Dat je team doet wat nodig is.<br/>Dat groei voorspelbaar wordt.</p>
+          </div>
+          <div class="bg-mint rounded-2xl p-5 text-center text-white">
+            <svg class="w-7 h-7 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            <p class="font-bold text-2xl uppercase mb-1">No Cure, No Pay</p>
+            <p class="text-white font-bold text-base">Wat is 10% groei voor jou waard?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Hoe we werken -->
+  <div class="page px-10 py-6 bg-gradient-to-br from-deep via-deep-mid to-deep text-white">
+    <div class="absolute top-6 right-10">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-9" style="filter: invert(1)" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-5">
+        <h2 class="text-4xl font-bold mb-1">Hoe we werken</h2>
+        <p class="text-white/40 text-base">Een gestructureerde aanpak met duidelijke stappen</p>
+      </div>
+      <div class="grid grid-cols-4 gap-4 mb-5">
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="w-11 h-11 rounded-full bg-violet flex items-center justify-center text-white font-bold text-lg mx-auto mb-3">1</div>
+          <h3 class="font-bold text-base mb-2">Analyse</h3>
+          <p class="text-white/40 text-xs leading-tight">We brengen je huidige situatie in kaart. Waar lekt omzet? Waar zit de inefficiëntie? Wat kan direct beter?</p>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="w-11 h-11 rounded-full bg-violet flex items-center justify-center text-white font-bold text-lg mx-auto mb-3">2</div>
+          <h3 class="font-bold text-base mb-2">Inrichting</h3>
+          <p class="text-white/40 text-xs leading-tight">CRM, workflows en automatische signalen. Alles ingericht zodat het team weet wat te doen.</p>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="w-11 h-11 rounded-full bg-violet flex items-center justify-center text-white font-bold text-lg mx-auto mb-3">3</div>
+          <h3 class="font-bold text-base mb-2">Training</h3>
+          <p class="text-white/40 text-xs leading-tight">Je team leert de methodiek en het systeem. Praktisch, direct toepasbaar. Op de werkvloer, niet in een zaaltje.</p>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="w-11 h-11 rounded-full bg-violet flex items-center justify-center text-white font-bold text-lg mx-auto mb-3">4</div>
+          <h3 class="font-bold text-base mb-2">Optimalisatie</h3>
+          <p class="text-white/40 text-xs leading-tight">Data analyseren, bijsturen, verbeteren. Continue begeleiding tot het resultaat er staat en daarna.</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="glass rounded-xl p-4 text-center">
+          <p class="text-cyan font-bold text-xs uppercase tracking-wider mb-1">Samenwerking</p>
+          <p class="font-bold text-2xl">12 maanden</p>
+        </div>
+        <div class="glass rounded-xl p-4 text-center">
+          <p class="text-cyan font-bold text-xs uppercase tracking-wider mb-1">On site Q1</p>
+          <p class="font-bold text-2xl">Tweewekelijks</p>
+        </div>
+        <div class="glass rounded-xl p-4 text-center">
+          <p class="text-cyan font-bold text-xs uppercase tracking-wider mb-1">On site Q2 t/m Q4</p>
+          <p class="font-bold text-2xl">Maandelijks</p>
+        </div>
+      </div>
+      <p class="text-center text-violet mt-4 text-sm font-medium">Wij doen het werk. Jij ziet het resultaat.</p>
+    </div>
+  </div>
+
+  <!-- Slide 10: Onze klanten -->
+  <div class="page px-12 py-8 bg-surface">
+    <div class="absolute top-8 right-12">
+      <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-10" />
+    </div>
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="mb-5">
+        <h2 class="text-5xl font-bold text-fg mb-2">Onze klanten</h2>
+        <p class="text-fg/50 text-lg">Wij werken met trots voor deze organisaties</p>
+      </div>
+      <div class="bg-card rounded-2xl p-6 mb-5 border border-border">
+        <div class="grid grid-cols-7 gap-3">
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/floer-logo-D86of5Xo.png" alt="FLOER" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/bmtec-logo-B-7ZPvKy.png" alt="BMTEC" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/reposlogo.svg" alt="Repos" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/royal-de-vries-logo-DE5HruD_.png" alt="Royal De Vries" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/noboringsuitcases logo.png" alt="No Boring Suitcases" style="max-height:32px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/Wovar-logo-zwart.png" alt="Wovar" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/horecabier logo.png" alt="Horecabier" style="max-height:120px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/de vries trappen.svg" alt="De Vries Trappen" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/chocobezorgd-logo-B5U2XKA9.png" alt="Chocoladebezorgd" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/jc-logo-hNkYV-H9.png" alt="JC Electronics" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/marlan logo.png" alt="Marlan" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/fotocadeau logo.png" alt="Fotocadeau" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/scholma-logo-CzDUu-0H.webp" alt="Scholma Print" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+          <div class="bg-surface rounded-xl p-2 flex items-center justify-center h-14"><img src="logos/kunstgrasonline logo.svg" alt="Kunstgrasonline" style="max-height:28px; max-width:100%; object-fit:contain;" /></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-5">
+        <div class="bg-gradient-to-br from-deep via-deep-mid to-deep rounded-2xl p-5 text-white flex items-center gap-5">
+          <div class="flex-1">
+            <p class="text-cyan font-bold text-xs uppercase tracking-wider mb-1">Case study</p>
+            <p class="font-bold text-lg mb-1">Wovar</p>
+            <p class="text-white/50 text-sm">Verdubbeling van B2B omzet in 12 maanden. Voor meer informatie, bekijk de video op onze website.</p>
+          </div>
+        </div>
+        <div class="bg-violet/5 border border-violet/15 rounded-2xl p-5 flex items-center">
+          <p class="text-fg text-center w-full text-sm">Van MKB tot internationale organisaties. Allen met dezelfde uitdaging: meer uit het team en de klanten halen. Allen met dezelfde oplossing: Zwarte Kraai als structurele partner.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 11: CTA -->
+  <div class="page page-cta px-12 py-10 bg-gradient-to-br from-deep via-deep-mid to-deep text-white">
+    <div class="text-center max-w-4xl mx-auto">
+      <h2 class="text-5xl font-bold mb-3">
+        Samen maken wij het <span class="text-violet">verschil.</span>
+      </h2>
+      <p class="text-xl text-white/40 mb-8">
+        Plan een vrijblijvend gesprek. Wij analyseren je situatie en laten zien wat er mogelijk is.
+      </p>
+
+      <div class="flex items-center justify-center gap-8 mb-8">
+        <img class="presenter-photo w-20 h-20 rounded-full object-cover border-3 border-violet" src="photos/erwin-dijkstra.jpg" />
+        <div class="text-left">
+          <p class="presenter-name font-bold text-2xl">Erwin Dijkstra</p>
+          <p class="presenter-role text-violet font-bold">CEO & Strategie</p>
+        </div>
+      </div>
+
+      <div class="flex justify-center gap-4 mb-8">
+        <div class="presenter-phone bg-violet text-white font-bold px-8 py-4 rounded-xl text-lg">
+          +31 6 38 40 86 84
+        </div>
+        <div class="presenter-email glass border-2 border-violet text-violet font-bold px-8 py-4 rounded-xl text-lg">
+          erwin@zwartekraai.nl
+        </div>
+      </div>
+
+      <p class="text-violet font-bold text-xl mb-6">zwartekraai.nl</p>
+
+      <div class="flex justify-center items-center pt-5 border-t border-white/10">
+        <img src="zk-logo-full.png" alt="Zwarte Kraai" class="h-28" style="filter: invert(1)" />
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
