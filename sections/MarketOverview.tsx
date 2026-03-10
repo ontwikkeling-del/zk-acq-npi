@@ -1,23 +1,22 @@
 // @personalization: HIGH — 4 stat-kaarten (marktcijfers + bron), segmenttabel (klant's eigen klanttypen), bronvermelding onderaan.
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Building2, Users, Activity, Euro } from 'lucide-react';
+import { TrendingUp, Building2, Users, Globe, Euro } from 'lucide-react';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 
 const marketStats = [
-  { icon: Building2, value: 8354, suffix: '', label: 'Praktijken in NL', source: 'NZa 2024', color: 'brand-green' },
-  { icon: Users, value: 27000, suffix: '', label: 'Fysiotherapeuten', source: 'KNGF', color: 'brand-accent' },
-  { icon: Activity, value: 4.2, suffix: 'M', label: 'Patiënten per jaar', source: 'NZa', color: 'brand-pink', decimals: 1 },
-  { icon: Euro, value: 1.95, suffix: ' mrd', label: 'Totale marktwaarde', source: 'NZa 2024', color: 'brand-purple', decimals: 2 },
+  { icon: Building2, value: 18000, suffix: '+', label: 'Hoveniersbedrijven NL', source: 'CBS 2024', color: 'brand-green' },
+  { icon: Users, value: 9000, suffix: '+', label: 'Tuinbouwbedrijven NL', source: 'CBS 2024', color: 'brand-accent' },
+  { icon: Globe, value: 20, suffix: '+', label: 'Exportlanden actief', source: 'NPI intern', color: 'brand-pink' },
+  { icon: Euro, value: 180, suffix: 'M+', label: 'Agri-folie markt NL', source: 'Eurostat 2024', color: 'brand-purple' },
 ];
 
 const segments = [
-  { name: 'Eenmanspraktijken / ZZP', count: '~4.000–5.000', frequency: 'Incidenteel', potential: 'Laag', barWidth: '25%' },
-  { name: 'Kleine praktijken (2–5 pers.)', count: '~2.500–3.000', frequency: 'Regelmatig', potential: 'Midden', barWidth: '45%' },
-  { name: 'Middelgrote praktijken (5–15)', count: '~800–1.200', frequency: 'Structureel', potential: 'Hoog', barWidth: '75%' },
-  { name: 'Grote ketens (15+)', count: '~200–400', frequency: 'Raamcontracten', potential: 'Zeer hoog', barWidth: '95%' },
-  { name: 'Sportklinieken & revalidatie', count: '~500–700', frequency: 'Hoog tapeverbruik', potential: 'Hoog', barWidth: '70%' },
-  { name: 'Revalidatiecentra', count: '~100–150', frequency: 'High-end apparatuur', potential: 'Premium', barWidth: '85%' },
+  { name: 'Hoveniers & Tuinarchitecten', count: '~8.000–10.000', frequency: 'Seizoensgebonden', potential: 'Hoog', barWidth: '70%' },
+  { name: 'Kwekerijen & Glastuinbouw', count: '~3.000–4.000', frequency: 'Structureel', potential: 'Hoog', barWidth: '75%' },
+  { name: 'Vijver & Wateropslag spec.', count: '~1.500–2.500', frequency: 'Hoogfrequent', potential: 'Zeer hoog', barWidth: '90%' },
+  { name: 'Agrarische bedrijven', count: '~5.000+', frequency: 'Bulkafname', potential: 'Midden', barWidth: '50%' },
+  { name: 'Internationale distributeurs', count: '~200–500', frequency: 'Grote orders', potential: 'Premium', barWidth: '85%' },
 ];
 
 export const MarketOverview: React.FC = () => {
@@ -48,7 +47,7 @@ export const MarketOverview: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-4xl md:text-5xl font-black uppercase leading-none"
           >
-            Fysiotherapie <span className="text-brand-green">in Nederland</span>
+            Tuinbouw & Agri <span className="text-brand-green">in Nederland</span>
           </motion.h2>
         </div>
 
@@ -68,7 +67,7 @@ export const MarketOverview: React.FC = () => {
                   <Icon className={`w-5 h-5 text-${stat.color}`} />
                 </div>
                 <p className={`text-${stat.color} font-black text-2xl md:text-3xl`}>
-                  <AnimatedCounter end={stat.value} suffix={stat.suffix} decimals={stat.decimals || 0} />
+                  <AnimatedCounter end={stat.value} suffix={stat.suffix} decimals={0} />
                 </p>
                 <p className="text-gray-600 font-medium text-xs mt-1">{stat.label}</p>
                 <p className="text-gray-400 text-[10px]">{stat.source}</p>
@@ -97,7 +96,7 @@ export const MarketOverview: React.FC = () => {
                 transition={{ delay: 0.8 + index * 0.08 }}
                 className="flex items-center gap-4"
               >
-                <div className="w-[200px] shrink-0">
+                <div className="w-[220px] shrink-0">
                   <p className="text-gray-700 text-sm font-medium truncate">{seg.name}</p>
                 </div>
                 <div className="w-[100px] shrink-0 text-right">
@@ -118,7 +117,7 @@ export const MarketOverview: React.FC = () => {
             ))}
           </div>
 
-          <p className="text-gray-400 text-[10px] mt-4 text-right">Bron: NZa Kerncijfers 2024, ZorgkaartNederland, KNGF</p>
+          <p className="text-gray-400 text-[10px] mt-4 text-right">Bron: CBS Landbouwtelling 2024, Eurostat, NPI intern</p>
         </motion.div>
       </div>
     </section>
