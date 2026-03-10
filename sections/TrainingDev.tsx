@@ -86,7 +86,7 @@ export const TrainingDev: React.FC = () => {
                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-brand-pink/30 shrink-0">
                   <img
                     src="https://zwartekraai.nl/assets/migilio-tirtosentono-updated-C55K0N-i.jpg"
-                    alt="Migilio Tirtosentono — Sales Trainer"
+                    alt="Migilio Tirtosentono: Sales Trainer"
                     className="w-full h-full object-cover"
                   />
                 </div>

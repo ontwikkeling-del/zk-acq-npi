@@ -83,7 +83,7 @@ export const AIAutomationPillar: React.FC = () => {
         >
           <Sparkles className="w-5 h-5 text-brand-green shrink-0" />
           <p className="text-gray-600 text-xs">
-            <strong className="text-brand-green">Elke maand een nieuw AI-traject</strong> — in 12 maanden 12+ automatiseringen die samen meer opleveren dan de investering.
+            <strong className="text-brand-green">Elke maand een nieuw AI-traject</strong>: in 12 maanden 12+ automatiseringen die samen meer opleveren dan de investering.
           </p>
         </motion.div>
       </div>

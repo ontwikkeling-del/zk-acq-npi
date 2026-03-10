@@ -1,4 +1,4 @@
-// @personalization: LOW — structuur generiek. Popups (MaxClientValue + NewClients) bevatten klant-specifieke content.
+// @personalization: LOW: structuur generiek. Popups (MaxClientValue + NewClients) bevatten klant-specifieke content.
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, UserPlus, X } from 'lucide-react';

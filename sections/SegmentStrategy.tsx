@@ -24,7 +24,7 @@ const segments = [
     criteria: '<€1.000 maar hoog potentieel',
     strategy: 'Cross-sell activatie',
     color: 'brand-pink',
-    description: 'Koopt alleen tape maar heeft 8 kamers — daar zit €4.000+ potentieel',
+    description: 'Koopt alleen tape maar heeft 8 kamers: daar zit €4.000+ potentieel',
     icon: TrendingUp,
   },
   {
@@ -46,7 +46,7 @@ const signals = [
     color: 'red-500',
     bgColor: 'red-50',
     borderColor: 'red-200',
-    example: 'Fysiopraktijk Groningen — 5 vestigingen, laatste order 94 dagen geleden',
+    example: 'Fysiopraktijk Groningen: 5 vestigingen, laatste order 94 dagen geleden',
   },
   {
     title: 'Cross-sell kans',
@@ -56,7 +56,7 @@ const signals = [
     color: 'brand-accent',
     bgColor: 'brand-accent/5',
     borderColor: 'brand-accent/20',
-    example: 'Praktijk met 6 kamers, €400/jaar — koopt 90% elders',
+    example: 'Praktijk met 6 kamers, €400/jaar: koopt 90% elders',
   },
   {
     title: 'Herbestelling nodig',
@@ -66,7 +66,7 @@ const signals = [
     color: 'brand-green',
     bgColor: 'brand-green/5',
     borderColor: 'brand-green/20',
-    example: 'Bestelt normaal elke 45 dagen papierrollen — nu 58 dagen stil',
+    example: 'Bestelt normaal elke 45 dagen papierrollen: nu 58 dagen stil',
   },
   {
     title: 'Daling bestelwaarde',
@@ -76,7 +76,7 @@ const signals = [
     color: 'brand-pink',
     bgColor: 'brand-pink/5',
     borderColor: 'brand-pink/20',
-    example: 'Van €800 naar €200/kwartaal — concurrent actief?',
+    example: 'Van €800 naar €200/kwartaal: concurrent actief?',
   },
 ];
 
@@ -163,7 +163,7 @@ export const SegmentStrategy: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-gray-500 font-bold text-xs uppercase tracking-wider mb-3"
             >
-              Automatische signalen — klik voor detail
+              Automatische signalen: klik voor detail
             </motion.p>
 
             <div className="space-y-3">

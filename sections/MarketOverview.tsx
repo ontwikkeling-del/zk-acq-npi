@@ -1,4 +1,4 @@
-// @personalization: HIGH — 4 stat-kaarten (marktcijfers + bron), segmenttabel (klant's eigen klanttypen), bronvermelding onderaan.
+// @personalization: HIGH: 4 stat-kaarten (marktcijfers + bron), segmenttabel (klant's eigen klanttypen), bronvermelding onderaan.
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Building2, Users, Globe, Euro } from 'lucide-react';
@@ -84,7 +84,7 @@ export const MarketOverview: React.FC = () => {
           className="bg-gray-50 border border-gray-100 rounded-2xl p-5"
         >
           <p className="text-brand-purple font-black text-sm uppercase tracking-wider mb-4">
-            Segmentatie — waar zit het potentieel?
+            Segmentatie: waar zit het potentieel?
           </p>
 
           <div className="space-y-3">

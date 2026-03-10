@@ -24,7 +24,7 @@ const segments = [
     criteria: '<€1.000 maar hoog potentieel',
     strategy: 'Cross-sell activatie',
     color: 'brand-pink',
-    description: 'Koopt alleen tape maar heeft 8 kamers — daar zit €4.000+ potentieel',
+    description: 'Koopt alleen tape maar heeft 8 kamers: daar zit €4.000+ potentieel',
     icon: TrendingUp,
   },
   {
@@ -68,7 +68,7 @@ export const CustomerSegmentation: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-gray-500 text-base leading-relaxed mb-6"
             >
-              Op basis van besteldata uit Business Central deelt het systeem klanten automatisch in A/B/C-segmenten in. Elke groep krijgt een eigen aanpak — van persoonlijk account management tot geautomatiseerde win-back campagnes.
+              Op basis van besteldata uit Business Central deelt het systeem klanten automatisch in A/B/C-segmenten in. Elke groep krijgt een eigen aanpak: van persoonlijk account management tot geautomatiseerde win-back campagnes.
             </motion.p>
 
             <motion.div

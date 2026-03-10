@@ -41,7 +41,7 @@ export const CRMPillar: React.FC = () => {
           transition={{ delay: 0.4 }}
           className="text-gray-600 text-lg leading-relaxed mb-6"
         >
-          Gebaseerd op hoe de multinationals het doen — maar dan toepasbaar voor het MKB. Een CRM dat je team vertelt wat ze moeten doen, wanneer en bij wie.
+          Gebaseerd op hoe de multinationals het doen: maar dan toepasbaar voor het MKB. Een CRM dat je team vertelt wat ze moeten doen, wanneer en bij wie.
         </motion.p>
 
         <motion.div

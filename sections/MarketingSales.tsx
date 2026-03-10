@@ -103,7 +103,7 @@ export const MarketingSales: React.FC = () => {
         >
           <Repeat className="w-5 h-5 text-brand-purple/40" />
           <p className="text-brand-purple/60 font-bold text-sm">
-            Continue loop — elke deal maakt de volgende campagne slimmer
+            Continue loop: elke deal maakt de volgende campagne slimmer
           </p>
         </motion.div>
       </div>

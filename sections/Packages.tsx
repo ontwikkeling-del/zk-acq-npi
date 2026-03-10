@@ -135,7 +135,7 @@ export const Packages: React.FC = () => {
           transition={{ delay: 0.8 }}
           className="text-center mt-4 text-brand-green font-bold text-sm"
         >
-          Wij doen het werk. Jij ziet het resultaat — elke maand.
+          Wij doen het werk. Jij ziet het resultaat: elke maand.
         </motion.p>
       </div>
     </section>

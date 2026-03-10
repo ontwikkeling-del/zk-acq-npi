@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Eye, DollarSign, BarChart3, ShieldCheck, Crosshair, Users, Zap } from 'lucide-react';
 import { config } from '../clientConfig';
 
-// Variant: Zonder CRM — focus on CRM value
+// Variant: Zonder CRM: focus on CRM value
 const statsNoCrm = [
   {
     value: '29%',
@@ -35,7 +35,7 @@ const statsNoCrm = [
   },
 ];
 
-// Variant: Met CRM — focus on optimization & integration
+// Variant: Met CRM: focus on optimization & integration
 const statsWithCrm = [
   {
     value: '<50%',

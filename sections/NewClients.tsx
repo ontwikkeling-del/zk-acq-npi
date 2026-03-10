@@ -1,4 +1,4 @@
-// @personalization: HIGH — config.newClientSteps (4 stappen) + description-tekst. Stappen worden geladen uit clientConfig.
+// @personalization: HIGH: config.newClientSteps (4 stappen) + description-tekst. Stappen worden geladen uit clientConfig.
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserPlus, Search, Target, Mail, Phone, ArrowRight, X } from 'lucide-react';

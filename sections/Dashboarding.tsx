@@ -220,7 +220,7 @@ export const Dashboarding: React.FC = () => {
           <div>
             <p className="text-white font-bold text-sm">100% op maat gebouwd</p>
             <p className="text-white/40 text-xs">
-              Dit dashboard is een voorbeeld. Jullie bepalen wat je wilt zien — wij bouwen het.
+              Dit dashboard is een voorbeeld. Jullie bepalen wat je wilt zien: wij bouwen het.
             </p>
           </div>
         </motion.div>

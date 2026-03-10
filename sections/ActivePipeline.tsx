@@ -41,7 +41,7 @@ export const ActivePipeline: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-gray-500 text-base leading-relaxed"
             >
-              Jullie doorlooptijd is 3 weken per offerte. Met HubSpot + 3CX-koppeling logt elk gesprek automatisch en weet je altijd waar elke offerte staat — zonder dat Hanneke alles in haar hoofd hoeft te bewaren.
+              Jullie doorlooptijd is 3 weken per offerte. Met HubSpot + 3CX-koppeling logt elk gesprek automatisch en weet je altijd waar elke offerte staat: zonder dat Hanneke alles in haar hoofd hoeft te bewaren.
             </motion.p>
           </div>
 
