@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Lock, ArrowRight } from 'lucide-react';
 
 // Only SHA-256 hashes stored — no plaintext passwords in source
-const SHARE_HASH = '0994f313429f73b085c0f9664c7739c086ba0db83cc30c1bb2b5820b0214ae9d';
-const PRESENTER_HASH = '047eaef490823a92f24079423c63cfaf24870e6449bbbf726806a5e014aa084d';
+const SHARE_HASH = '094dcc48a1a72f4ea1fcd4f6a58fad20cc8fdbcd02919c8576c553c24fc5fa55';
+const PRESENTER_HASH = '3915d55fbc048ad078d39826d1224e3ef3a25b5bb523646e240d71756a6464b5';
 const SESSION_KEY = 'zk-auth';
 
 async function sha256(message: string): Promise<string> {
