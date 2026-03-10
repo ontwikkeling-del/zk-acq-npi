@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { TrendingUp, RefreshCw, ShoppingCart, Heart } from 'lucide-react';
 
 const strategies = [
-  { icon: RefreshCw, text: 'Herhalingsaankopen stimuleren via slimme signalen', color: 'brand-green' },
-  { icon: ShoppingCart, text: 'Cross-sell kansen identificeren per klantsegment', color: 'brand-accent' },
-  { icon: TrendingUp, text: 'Upsell naar hogere productlijnen op basis van data', color: 'brand-pink' },
-  { icon: Heart, text: 'Klantwaarde verhogen door proactief relatieonderhoud', color: 'brand-green' },
+  { icon: RefreshCw, text: 'Folie-klanten ook tuinbouwmaterialen aanbieden — en andersom', color: 'brand-green' },
+  { icon: ShoppingCart, text: 'Wateropslag-klanten kopen ook vijverfolie: logische combo, nu gemist', color: 'brand-accent' },
+  { icon: TrendingUp, text: 'Seizoenssignalen: lente is hoogsezoen — wie belt welke klant wanneer?', color: 'brand-pink' },
+  { icon: Heart, text: 'Internationale accounts (Sri Lanka, Bangkok) structureel opvolgen via HubSpot', color: 'brand-green' },
 ];
 
 export const MaxClientValue: React.FC = () => {
@@ -42,7 +42,7 @@ export const MaxClientValue: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-gray-500 text-base leading-relaxed"
             >
-              Bestaande klanten kopen vaak maar een fractie van wat ze zouden kunnen. Via data identificeren we cross-sell en upsell kansen en verhogen we de klantwaarde.
+              Jullie klanten kopen vaak maar 1 van de 3 productlijnen. Via data zien we wie ook folie, tuinbouw of wateropslag nodig heeft — en zorgen we dat het verkoopteam op het juiste moment belt.
             </motion.p>
           </div>
 

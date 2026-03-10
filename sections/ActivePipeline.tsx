@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { Target, CheckCircle, Clock, BarChart3 } from 'lucide-react';
 
 const actions = [
-  { icon: CheckCircle, text: 'Elke deal een volgende stap — geen lead blijft liggen', color: 'brand-green' },
-  { icon: Clock, text: 'Automatische herinneringen bij openstaande offertes', color: 'brand-accent' },
-  { icon: BarChart3, text: 'Pipeline dashboard met conversie per fase', color: 'brand-pink' },
-  { icon: Target, text: 'Sales weet elke ochtend precies wie te bellen', color: 'brand-green' },
+  { icon: CheckCircle, text: '3CX-koppeling: elk telefoongesprek automatisch gelogd op de klantkaart', color: 'brand-green' },
+  { icon: Clock, text: 'Openstaande offertes na 3 weken? Automatisch een herinneringstask voor het team', color: 'brand-accent' },
+  { icon: BarChart3, text: 'Pipeline per segment: Folie, Tuinbouw én Wateropslag apart inzichtelijk', color: 'brand-pink' },
+  { icon: Target, text: 'Het verkoopteam weet elke ochtend precies welke klant aandacht nodig heeft', color: 'brand-green' },
 ];
 
 export const ActivePipeline: React.FC = () => {
@@ -41,7 +41,7 @@ export const ActivePipeline: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-gray-500 text-base leading-relaxed"
             >
-              Werk met CRM alsof het je beste verkoper is. Elke actieve kans wordt goed opgevolgd, geen offerte valt tussen wal en schip.
+              Jullie doorlooptijd is 3 weken per offerte. Met HubSpot + 3CX-koppeling logt elk gesprek automatisch en weet je altijd waar elke offerte staat — zonder dat Hanneke alles in haar hoofd hoeft te bewaren.
             </motion.p>
           </div>
 

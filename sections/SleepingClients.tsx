@@ -41,7 +41,7 @@ export const SleepingClients: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-gray-500 text-base leading-relaxed"
             >
-              Klanten die wegdrijven kosten je geld. Wij bouwen automatische signalen zodat je op tijd ingrijpt — voordat de concurrent het doet.
+              130 van jullie 350 klanten hebben maar 1x besteld en kwamen nooit meer terug. Wij bouwen automatische signalen zodat je ze op tijd bereikt — voordat de concurrent het doet.
             </motion.p>
           </div>
 

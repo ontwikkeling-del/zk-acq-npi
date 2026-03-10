@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
-// FysioSupplies defaults — gebaseerd op B2B vragenlijst data
-// 46.873 klanten in 3 jaar, €13,9M omzet, 69,5% koopt maar 1 keer
+// NPI BV defaults — gebaseerd op B2B vragenlijst + briefing
+// 350 klanten, €10.4M omzet, gem. €29.700/klant/jaar, 130 slapende klanten
 const DEFAULTS = {
-  // Klantbehoud (focus: 14.287 herhalers behouden)
-  actieveKlanten: 14000,
-  gemJaaromzet: 600,
-  huidigChurn: 15,
+  // Klantbehoud (5% churnverbetering = €520K+ behoud)
+  actieveKlanten: 350,
+  gemJaaromzet: 15000,
+  huidigChurn: 20,
   verbeterdChurn: 10,
-  // Nieuwe klanten (heractivatie eenmalige kopers)
-  extraNieuweKlanten: 50,
-  gemEersteJaaromzet: 400,
-  // Cross-sell & upsell (12.000+ producten, klanten kopen maar 1 categorie)
-  crossSellKlanten: 500,
-  extraOmzetPerKlant: 300,
-  // Tijdsbesparing (geen CRM, alles handmatig)
-  urenPerWeek: 15,
-  uurtarief: 35,
+  // Slapende klanten reactiveren (20% van 130 = 26 klanten)
+  extraNieuweKlanten: 26,
+  gemEersteJaaromzet: 29700,
+  // Cross-sell folie ↔ tuinbouw ↔ wateropslag
+  crossSellKlanten: 60,
+  extraOmzetPerKlant: 5000,
+  // Tijdsbesparing (Hanneke + binnendienst, alles handmatig via Cash)
+  urenPerWeek: 8,
+  uurtarief: 40,
 };
 
 type Inputs = typeof DEFAULTS;
