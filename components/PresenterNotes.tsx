@@ -67,13 +67,13 @@ const slideNotes: Record<string, SlideNote> = {
     ],
   },
   ClientSituation: {
-    title: 'Huidige Situatie FysioSupplies',
+    title: 'Huidige Situatie NPI BV',
     timing: '2 min',
     notes: [
-      'Laat de bullets staan — deze zijn uit HUN eigen woorden (het gesprek met Jeroen)',
-      '"Wij benaderen eigenlijk niet" — direct citaat',
-      'Fysiopraktijk Groningen-anekdote: concrete klant die weg is gelopen',
-      'Kernvraag: hoeveel praktijken zijn er nog meer?',
+      'Laat de feiten staan - allemaal uit de B2B vragenlijst, ingevuld door Hanneke zelf',
+      '37% bestelde maar 1x - dat zijn 130 van 350 klanten die nooit terugkwamen',
+      'Offertedoorlooptijd van 3 weken is een concreet aanknopingspunt - wat kost die vertraging?',
+      'Dewi Agriservice in 2019 overgenomen - vraag hoe die fruitteelt-klanten zijn bijgehouden',
     ],
     questions: [
       'Hoeveel klanten zijn er het afgelopen jaar gestopt met bestellen?',
@@ -81,12 +81,13 @@ const slideNotes: Record<string, SlideNote> = {
     ],
   },
   MarketOverview: {
-    title: 'De Fysiotherapie Markt',
+    title: 'De Tuinbouw & Agri Markt',
     timing: '2 min',
     notes: [
-      'Laat de grote getallen even inwerken — 8.354 praktijken',
-      'Focus op het segment "interessante praktijken" (3+ kamers)',
-      'Vergelijk met hun huidige klantenbestand — hoeveel hebben ze er nu?',
+      'Laat de grote getallen even inwerken - 18.000+ hoveniersbedrijven, 9.000+ tuinbouwbedrijven',
+      'NPI bedient 20+ exportlanden: Sri Lanka en Bangkok al actief - internationaal potentieel is groot',
+      'Segment Vijver & Wateropslag scoort "Zeer hoog" - dat is al hun specialiteit, dus extra cross-sell kans',
+      'Vergelijk: hoeveel van die 18.000 hoveniers hebben ze nu als klant?',
     ],
     questions: [
       'Hoeveel actieve B2B klanten hebben jullie op dit moment?',
@@ -94,18 +95,18 @@ const slideNotes: Record<string, SlideNote> = {
     ],
   },
   ClientBusinessCase: {
-    title: 'De Potentie — Waar ligt de ruimte?',
+    title: 'De Potentie - Waar ligt de ruimte?',
     timing: '3 min',
     introQuestions: [
-      'Hoeveel besteedt een gemiddelde praktijk per jaar bij jullie?',
+      'Hoeveel besteedt een gemiddelde klant per jaar bij jullie?',
       'Weten jullie hoeveel producten een klant NIET bij jullie koopt?',
     ],
     notes: [
-      'Dit is een POTENTIE-slide — nog geen harde cijfers benoemen',
-      'Loop door verbruiksmateriaal per praktijk: tape, olie, papier — herkenbaar',
-      'Marktpotentieel laten inwerken: 8.354 praktijken × gemiddeld verbruik',
-      'Rechts de 5 focusgebieden tonen — ZONDER bedragen',
-      '"Concrete cijfers volgen verderop" — dit is om richting te geven, niet om te rekenen',
+      'Dit is een POTENTIE-slide - nog geen harde cijfers benoemen',
+      'Loop door productmix per klant: folie, tuinbouw, wateropslag - veel klanten kopen maar 1 lijn',
+      'Marktpotentieel: 18.000+ hoveniers x gemiddeld verbruik folie en tuinbouwbenodigdheden',
+      'Rechts de 5 focusgebieden tonen - ZONDER bedragen',
+      '"Concrete cijfers volgen verderop" - dit is om richting te geven, niet om te rekenen',
       'Doel: laten zien dat er VEEL ruimte is die ze nu laten liggen',
     ],
     questions: [
@@ -117,15 +118,15 @@ const slideNotes: Record<string, SlideNote> = {
     title: 'Segmentatie & Signalen',
     timing: '3 min',
     introQuestions: [
-      'Weten jullie welke klanten alleen tape kopen maar nooit apparatuur?',
+      'Weten jullie welke klanten alleen folie kopen maar nooit tuinbouw of wateropslag?',
       'Krijgen jullie AM-ers een signaal als een klant stopt met bestellen?',
       'Hoe bepalen jullie nu wie ze moeten bellen?',
     ],
     notes: [
-      'BEGIN MET VRAGEN — laat ze zelf het probleem benoemen',
+      'BEGIN MET VRAGEN - laat ze zelf het probleem benoemen',
       'Klik door de signaalkaarten: maak het concreet',
-      '"Een klant van €500 met 8 behandelkamers koopt 90% ergens anders — die is JUIST interessant"',
-      'Vergelijk: 2 AM-ers handmatig vs. 2 AM-ers met automatisering',
+      '"Een klant die alleen folieoplossingen afneemt terwijl ze ook vijvers aanleggen - die is JUIST interessant"',
+      'Vergelijk: AM-er handmatig bijhouden vs. automatisch signaal bij afwijkend bestelpatroon',
     ],
     questions: [
       'Hoe bepalen jullie nu welke klanten prioriteit krijgen?',
@@ -328,7 +329,7 @@ const slideNotes: Record<string, SlideNote> = {
     ],
     notes: [
       'Bestaande klanten kopen vaak maar een fractie van wat ze zouden kunnen',
-      'Data laat zien: welke klant koopt alleen tape maar nooit apparatuur?',
+      'Data laat zien: welke klant koopt alleen folie maar nooit tuinbouw of wateropslag?',
       'Herhalingsaankopen stimuleren: slimme signalen bij verbruiksproducten',
       'Upsell: op basis van data naar hogere productlijnen adviseren',
       'LTV verhogen door proactief relatieonderhoud — niet wachten tot ze bellen',
@@ -344,8 +345,8 @@ const slideNotes: Record<string, SlideNote> = {
     timing: '2 min',
     notes: [
       'Pas in Fase 4 beginnen met actieve acquisitie — als het fundament staat',
-      'Data-gedreven: we weten precies welk type praktijk het beste past (ICP)',
-      'Lookalike targeting: zoek praktijken die lijken op je beste klanten',
+      'Data-gedreven: we weten precies welk type bedrijf het beste past - hoveniers, kwekerijen, wateropslag specialisten',
+      'Lookalike targeting: zoek bedrijven die lijken op je beste klanten in NL en exportmarkten',
       'Geautomatiseerde outreach met lead scoring — geen koud bellen in het wilde weg',
       'Benadruk: dit is waar de meeste bedrijven BEGINNEN, maar dat is achterlijk',
       'Eerst bestaande klanten maximaliseren, dan pas nieuwe erbij',
